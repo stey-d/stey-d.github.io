@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Власть голоса — тематический конспект</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#17121F;
+    --bg-2:#1F1829;
+    --bg-3:#291F38;
+    --ink:#ECE4D6;
+    --ink-soft:#A99FBC;
+    --ink-faint:#7C7291;
+    --amber:#EDA83C;
+    --amber-soft:#F3C87E;
+    --ember:#D9642B;
+    --crimson:#D23A56;
+    --line:rgba(236,228,214,0.12);
+    --line-soft:rgba(236,228,214,0.06);
+    --serif:"Playfair Display",Georgia,serif;
+    --sans:"Manrope",system-ui,-apple-system,sans-serif;
+    --wrap:800px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--amber);color:#1A1320}
+
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 26px}
+
+  /* ---------- eyebrow ---------- */
+  .eyebrow{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:.68rem;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--amber);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:clamp(70px,13vh,150px) 0 60px;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background:
+      radial-gradient(120% 90% at 82% 8%, rgba(237,168,60,.16), transparent 55%),
+      radial-gradient(100% 80% at 5% 100%, rgba(210,58,86,.10), transparent 60%);
+    pointer-events:none;
+  }
+  .hero .wrap{position:relative;z-index:2}
+  .hero .eyebrow{margin-bottom:26px}
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:800;
+    font-size:clamp(3.1rem,10vw,6.4rem);
+    line-height:.94;
+    letter-spacing:-.01em;
+    margin-bottom:8px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:600;
+    color:var(--amber-soft);
+  }
+  .hero .author{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(1.1rem,2.6vw,1.5rem);
+    color:var(--ink-soft);
+    margin-bottom:30px;
+  }
+  .hero .lede{
+    max-width:56ch;
+    font-size:1.08rem;
+    color:var(--ink);
+    margin-bottom:44px;
+  }
+  .hero .lede b{color:var(--amber-soft);font-weight:700}
+
+  /* waveform signature */
+  .wave{
+    display:flex;
+    align-items:flex-end;
+    gap:2px;
+    height:96px;
+    width:100%;
+    margin:6px 0 8px;
+  }
+  .wave.hero-wave{height:120px}
+  .wave i{
+    flex:1 1 auto;
+    min-width:1px;
+    border-radius:2px;
+    background:linear-gradient(180deg,var(--amber),var(--ember));
+    opacity:.55;
+    transform-origin:bottom;
+  }
+  .hero-wave i{opacity:.7}
+  @media (prefers-reduced-motion:no-preference){
+    .hero-wave i{animation:breathe 3.4s ease-in-out infinite}
+  }
+  @keyframes breathe{
+    0%,100%{transform:scaleY(1)}
+    50%{transform:scaleY(.62)}
+  }
+
+  /* ---------- table of contents ---------- */
+  .toc{
+    margin-top:54px;
+    border-top:1px solid var(--line);
+  }
+  .toc a{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:baseline;
+    gap:18px;
+    padding:17px 4px;
+    border-bottom:1px solid var(--line);
+    transition:padding-left .25s ease,color .25s ease;
+  }
+  .toc a:hover,.toc a:focus-visible{padding-left:14px;color:var(--amber-soft)}
+  .toc .n{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--amber);
+    min-width:2.4ch;
+  }
+  .toc .t{font-weight:600;font-size:1.05rem}
+  .toc .meta{font-size:.78rem;color:var(--ink-faint);letter-spacing:.02em}
+  @media(max-width:560px){.toc .meta{display:none}}
+
+  /* ---------- CHAPTER ---------- */
+  .chapter{
+    position:relative;
+    padding:clamp(64px,10vh,110px) 0 10px;
+    border-top:1px solid var(--line-soft);
+  }
+  .chapter-head{position:relative;margin-bottom:46px}
+  .ghost-n{
+    position:absolute;
+    top:-.55em;right:-6px;
+    font-family:var(--serif);
+    font-weight:800;
+    font-size:clamp(6rem,20vw,13rem);
+    line-height:1;
+    color:transparent;
+    -webkit-text-stroke:1.4px rgba(237,168,60,.20);
+    text-stroke:1.4px rgba(237,168,60,.20);
+    z-index:0;
+    pointer-events:none;
+    user-select:none;
+  }
+  .chapter-head .inner{position:relative;z-index:1}
+  .chapter-head .eyebrow{margin-bottom:16px}
+  .chapter-head h2{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(1.9rem,5vw,3.2rem);
+    line-height:1.04;
+    letter-spacing:-.005em;
+    margin-bottom:14px;
+    max-width:18ch;
+  }
+  .chapter-head .theme{
+    font-size:1.02rem;
+    color:var(--ink-soft);
+    max-width:54ch;
+  }
+
+  /* entries */
+  .entry{
+    position:relative;
+    padding:22px 0 24px 26px;
+    border-left:2px solid var(--line);
+    margin-bottom:6px;
+    transition:border-color .3s ease;
+  }
+  .entry::before{
+    content:"";
+    position:absolute;
+    left:-5px;top:30px;
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--ink-faint);
+    transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;
+  }
+  .entry:hover{border-left-color:rgba(237,168,60,.45)}
+  .entry:hover::before{
+    border-color:var(--amber);
+    background:var(--amber);
+    box-shadow:0 0 0 4px rgba(237,168,60,.14);
+  }
+  .entry h3{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.32rem;
+    line-height:1.2;
+    margin-bottom:3px;
+    color:var(--ink);
+  }
+  .entry .tag{
+    display:block;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:12px;
+  }
+  .entry p{font-size:1.005rem;color:#DAD2C6}
+  .entry p+p{margin-top:10px}
+  .entry b{color:var(--amber-soft);font-weight:700}
+
+  /* reveal */
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.in{opacity:1;transform:none}
+  }
+
+  /* pull quote */
+  .pull{
+    margin:40px 0 34px;
+    padding:30px 30px 30px 34px;
+    background:linear-gradient(135deg,var(--bg-2),var(--bg-3));
+    border-left:3px solid var(--amber);
+    border-radius:3px;
+    position:relative;
+  }
+  .pull.crimson{border-left-color:var(--crimson)}
+  .pull q{
+    display:block;
+    quotes:"«" "»";
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(1.3rem,3vw,1.8rem);
+    line-height:1.35;
+    color:var(--amber-soft);
+  }
+  .pull.crimson q{color:#F0A9B4}
+  .pull cite{
+    display:block;
+    margin-top:14px;
+    font-style:normal;
+    font-size:.82rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--ink-faint);
+  }
+
+  /* aside note (Dali lamp etc.) */
+  .aside{
+    margin:30px 0;
+    padding:20px 22px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:rgba(255,255,255,.015);
+    font-size:.98rem;
+    color:var(--ink-soft);
+  }
+  .aside strong{color:var(--amber);font-weight:700}
+
+  /* divider waveform */
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:2px;
+    height:34px;
+    margin:52px 0 4px;
+    opacity:.5;
+  }
+  .divider i{
+    flex:1 1 auto;
+    border-radius:2px;
+    background:var(--ink-soft);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:90px;
+    padding:56px 0 70px;
+    border-top:1px solid var(--line);
+    background:
+      radial-gradient(90% 120% at 50% 0%, rgba(237,168,60,.07), transparent 60%);
+  }
+  footer .eyebrow{margin-bottom:18px}
+  footer h4{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.5rem;
+    margin-bottom:12px;
+  }
+  footer p{font-size:.94rem;color:var(--ink-soft);max-width:60ch}
+  footer p+p{margin-top:12px}
+  .src{
+    margin-top:26px;
+    font-size:.82rem;
+    color:var(--ink-faint);
+    line-height:1.9;
+  }
+  .src span{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Тематический конспект · с примерами по главам</div>
+    <h1>Власть <em>голоса</em></h1>
+    <div class="author">Жан Абитболь · фониатр о голосе как инструменте власти</div>
+    <p class="lede">Автор смотрит на голос лидеров, певцов и ораторов <b>буквально через частоты и физиологию</b> — а не только через риторику. Семь тем: от голосов политиков и диктаторов до кастратов, чревовещателей, гипноза и суда, где всё сходится в тишине.</p>
+
+    <div class="wave hero-wave" id="heroWave" aria-hidden="true"></div>
+
+    <nav class="toc" aria-label="Содержание">
+      <a href="#ch1"><span class="n">I</span><span class="t">Голос власти: политики и ораторы</span><span class="meta">Уэллс · де Голль · Кинг</span></a>
+      <a href="#ch2"><span class="n">II</span><span class="t">Тёмная власть: диктаторы и манипуляция</span><span class="meta">Гитлер · Милгрэм · Павлов</span></a>
+      <a href="#ch3"><span class="n">III</span><span class="t">Голос как зрелище: опера и пение</span><span class="meta">Фаринелли · Каллас</span></a>
+      <a href="#ch4"><span class="n">IV</span><span class="t">Голос-иллюзия: чревовещатели и имитаторы</span><span class="meta">Фреди · Ле Люрон</span></a>
+      <a href="#ch5"><span class="n">V</span><span class="t">Власть гипноза</span><span class="meta">Брейд · pacing</span></a>
+      <a href="#ch6"><span class="n">VI</span><span class="t">Голос правосудия</span><span class="meta">Золя · маятник</span></a>
+      <a href="#ch7"><span class="n">VII</span><span class="t">Будущее в поисках своего голоса</span><span class="meta">Заключение</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= CH 1 ================= -->
+<section class="chapter" id="ch1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">01</div>
+      <div class="inner">
+        <div class="eyebrow">Глава первая</div>
+        <h2>Голос власти: политики и ораторы</h2>
+        <p class="theme">Голос как «цемент, из которого создаётся власть». Как ораторы лепят интонацию, паузу и темп, чтобы их слышали все слои общества.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Античность · Шахиджанян</span>
+      <h3>Демосфен, Цицерон, Сократ</h3>
+      <p>Классики закладывали связку «голос — истина — воздействие». Демосфен настаивал, что руководить государством нельзя, не говоря правды; Цицерон формулировал триаду оратора — научить, доставить удовольствие, произвести сильное впечатление; Сократу приписывается раскрытие личности через звук.</p>
+    </div>
+
+    <div class="pull reveal">
+      <q>Заговори, чтобы я тебя увидел</q>
+      <cite>Сократ — голос как раскрытие личности</cite>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1938 · радиомистификация</span>
+      <h3>Орсон Уэллс, «Война миров»</h3>
+      <p>23-летний Уэллс сознательно изменил голос — тон, темп, уверенность резко отличались от его прежних невыразительных эфиров. Вставки «учёных экспертов» с искренними, серьёзными интонациями сделали мистификацию правдоподобной и вызвали массовую панику. Чтобы ложь звучала убедительно, нужны доля правды и искренний голос.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1939 · борьба с собой</span>
+      <h3>Георг VI</h3>
+      <p>Работая с логопедом Лайонелом Логом, король, страдавший заиканием, «лепил голос, как глиняный сосуд» — говорил медленно, дробил слова, искусно использовал паузы. Голос властителя не мог звучать нерешительно, и эта победа над собой сделала речь убедительной.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1940–1968 · эволюция одного голоса</span>
+      <h3>Шарль де Голль</h3>
+      <p>Июнь 1940 — военный, чеканный голос, апелляция к инстинкту борьбы. Июнь 1944 — «Париж освобождён!» — глубокий голос трагического актёра. 1965 — освоение телевидения и смена имиджа. <b>30 мая 1968</b> — речь по радио при «мёртвом» экране: картинку заменил один голос с твёрдыми интонациями без тени сомнения. Пустой экран стал приёмом.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1964 · Пантеон</span>
+      <h3>Андре Мальро</h3>
+      <p>Речь при захоронении праха Жана Мулена: театральный, дрожащий голос, растянутые слова, рокочущее «р» как барабанная дробь, обращение к мёртвому на «ты». Абитболь называет это голосом, ставшим «голосом эпохи».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Микрофон · интимность</span>
+      <h3>Джон Кеннеди</h3>
+      <p>С приходом микрофона в политику вошла интимность: мягкий, негромкий голос, обращённый будто к каждому слушателю — «Синатра от политики». Ему же принадлежит образ мечты, ставшей явью: полёт на Луну «не потому, что это легко, но потому, что это трудно».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">«Говорящий метроном»</span>
+      <h3>Барак Обама</h3>
+      <p>«Yes We Can» — апелляция к родительскому инстинкту и гордости индивида, зов созидать, а не ниспровергать. Но здесь Абитболь критичен: Обама часто забывает об обертонах, речь изобилует остановками через равные промежутки — «говорящий метроном», который даже пародировал Daily Show. И всё же он избран: слушая его, вспоминаешь Линкольна, а не синтезатор.</p>
+    </div>
+
+    <div class="pull reveal">
+      <q>Говорящий метроном</q>
+      <cite>Абитболь об Обаме — сила позиции, а не тембра</cite>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1963 · мастер паузы</span>
+      <h3>Мартин Лютер Кинг</h3>
+      <p>Кинг работал паузами: после каждого повтора «Я мечтаю…» — пауза в несколько секунд, ровно столько, чтобы слушатель успел «помечтать» сам. Дозировка критична: пауза дольше четырёх секунд уже вредит — актёры называют этот эффект «рождественской ёлкой», когда зритель отвлекается. Речь у Мемориала Линкольна длилась 17 минут 40 секунд.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1932 · анализ Клайда Миллера</span>
+      <h3>Рузвельт против Гувера</h3>
+      <p>Гувер, чьё имя в 20-е было синонимом процветания, к началу 30-х оторвался от реальности: уволенные рабочие почувствовали себя обманутыми. На этом фоне Рузвельту удалось «продать» голосом идею «New Deal» — новый общественный договор.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1974 · первые теледебаты Франции</span>
+      <h3>Жискар д'Эстен — Миттеран</h3>
+      <p>За ними следили 25 млн зрителей. Жискар верно оценил, что важна не программа, а сам кандидат: держался непринуждённо, дружелюбно, в почти молитвенной позе крупным планом.</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 2 ================= -->
+<section class="chapter" id="ch2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">02</div>
+      <div class="inner">
+        <div class="eyebrow">Глава вторая</div>
+        <h2>Тёмная власть: диктаторы и манипуляция</h2>
+        <p class="theme">Как голос возбуждает в толпе первичные инстинкты — и как образование становится единственной защитой от подчинения.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">«Учебниковый» случай</span>
+      <h3>Адольф Гитлер</h3>
+      <p>Вопреки мифу о «визгливом» голосе, у Гитлера был тенор, тяготеющий к баритону. Обращаясь к толпе, он говорил в «головном регистре» — на тон выше обычного, почти невыносимо для слуха. Начинал тихо, затем повышал тон и ускорял темп; каждая фраза завершалась «как пощёчина или выстрел». Цель — довести слушателя до шокового, парализующего состояния.</p>
+    </div>
+
+    <div class="aside reveal">
+      <strong>Оранжевая лампа Дали.</strong> В мастерской художника лампы разного цвета зажигались в такт частотам музыки. Оранжевая не загоралась ни на Брамсе, ни на Бетховене, ни на Каллас — она вспыхнула единственный раз, когда Дали поставил запись речи Гитлера. Её пробудила сверхвысокая, пронзительная частота его голоса — та самая, что «электризовала толпу».
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Кино · «код диктатора»</span>
+      <h3>Чарли Чаплин, «Великий диктатор»</h3>
+      <p>Пародия на Гитлера, где нет ни слова по-немецки, вообще нет языка — только просодия: паузы, резкие перепады интонации, вопли. И этого достаточно, чтобы возникло полное впечатление связной речи. Чистый «код голоса диктатора».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Голос-наркотик</span>
+      <h3>Фидель Кастро</h3>
+      <p>Пример того, как голос лидера «отравляет» самого лидера: нескончаемые речевые потоки, где власть голоса становится наркотиком и для говорящего.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Политический код</span>
+      <h3>Берлускони и Бернар Тапи</h3>
+      <p>Два «специалиста по воздействию на коллективное бессознательное в период кризиса». Берлускони, в отличие от оппонента, в совершенстве владел политическим кодом голоса, поскольку принадлежал к избранному кругу.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Демагогия</span>
+      <h3>Жан-Мари Ле Пен</h3>
+      <p>Демагог, чередующий ярость и агрессию, поддерживающий страх псевдонаучным анализом и настойчиво эксплуатирующий код «принадлежности к группе».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1934 · Шахиджанян</span>
+      <h3>Юрий Левитан</h3>
+      <p>Ночью 25 января 1934 года Сталин случайно услышал по радио, как молодой диктор медленно, по слогам, начитывает полосу «Правды». Скучнейший текст — но голос заворожил. Сталин потребовал, чтобы именно этот человек читал его доклад на XVII съезде. Так голос решил карьеру Левитана.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Психология подчинения</span>
+      <h3>Милгрэм и Павлов</h3>
+      <p>Абитболь ссылается на эксперимент Милгрэма: около двух третей испытуемых в «цивилизованной, свободной стране» готовы были доводить разряды до 450 вольт, повинуясь спокойному, методичному голосу «учёного». И на Павлова: услышав приказ начальника, первый рефлекс — выполнить, как условный рефлекс слюноотделения. <b>Сопротивление такому подчинению даёт образование</b> — оно учит критически относиться к речам.</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 3 ================= -->
+<section class="chapter" id="ch3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">03</div>
+      <div class="inner">
+        <div class="eyebrow">Глава третья</div>
+        <h2>Голос как зрелище: опера и пение</h2>
+        <p class="theme">Здесь Абитболь-фониатр раскрывается вовсю — тело, принесённое в жертву голосу, и универсальная власть звука поверх любой культуры.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">XVIII век · «вокальный монстр»</span>
+      <h3>Фаринелли</h3>
+      <p>Карло Броски, родился в 1705 году под Бари. Диапазон в пять октав, 25 лет при дворе Филиппа V. На дебюте он устроил «дуэль» с трубачом-виртуозом: тот вёл ноту от pianissimo к fortissimo так долго, что публика была в восторге, — а Фаринелли взял ту же ноту хрустально-звонким голосом, держал её ещё дольше и добавил невиданные трели. Он мог тянуть одну ноту почти две минуты против сорока пяти секунд у профессионалов. Ценой была кастрация в детстве и «третий пол».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1994 · фильм Корбьё</span>
+      <h3>Реконструкция голоса Фаринелли</h3>
+      <p>Для фильма Институт IRCAM воссоздал утраченный голос кастрата, наложив два голоса: контратенора Дерека Ли Регена и польского колоратурного сопрано Эвы Маллас-Годлевской. Вопреки логике, высокие партии пел контратенор, а низкие — сопрано. Слияние вышло настолько убедительным, что публика приняла его как настоящее «чудо XVIII века».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">История · как появились кастраты</span>
+      <h3>«Джорджина» и папский запрет</h3>
+      <p>В 1688 году герцог Мантуи на вопрос папы, что ему больше всего понравилось в Риме, ответил: «Джорджина» — певица, покорившая его чувственным голосом. Разгневанный папа запретил женщинам петь на сцене. В образовавшуюся пустоту триумфально вошли кастраты. Первые появились в Сикстинской капелле в 1562 году, последний — Алессандро Морески — пел ещё в 1903-м.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Универсальность голоса</span>
+      <h3>Мария Каллас и эксперимент с аборигенами</h3>
+      <p>Аборигенам показали фильм с «лучшим и худшим» западной цивилизации — высадка на Луну, война, снег. Всё это оставило их равнодушными, пока на экране не появилась Каллас с арией «Casta Diva» из «Нормы».</p>
+    </div>
+
+    <div class="pull reveal">
+      <q>Я не понимаю, но чувствую, что в этом есть какая-то тайна</q>
+      <cite>Один из аборигенов — о голосе Каллас</cite>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Лас-Вегас · контекст ломает голос</span>
+      <h3>Селин Дион и наклон сцены</h3>
+      <p>В «Колизее» комплекса Caesars Palace у Селин вдруг начались проблемы с пением, хотя осмотр гортани ничего не выявил. Причину нашли вместе с педагогом Биллом Райли: сцену построили с наклоном в восемь градусов в сторону зала. Приспосабливаясь, Селин наклоняла корпус вперёд — а это разрушает вокальную технику. Сцену вернули в горизонталь, и проблема исчезла. <b>Знание контекста спасает голос лучше скальпеля.</b></p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Цена небрежности</span>
+      <h3>Тенор Венсан</h3>
+      <p>Многообещающий оперный тенор, живший в вихре гастролей, сгорел и потерял голос. У тенора самая высокая тесситура, высокие ноты берутся грудным регистром — «эквилибристика, как в цирке». Ускоренное обучение (девять лет за три года) дало непрочную базу; почувствовав силу, Венсан потерял бдительность — «а голос этого не прощает».</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 4 ================= -->
+<section class="chapter" id="ch4">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">04</div>
+      <div class="inner">
+        <div class="eyebrow">Глава четвёртая</div>
+        <h2>Голос-иллюзия: чревовещатели и имитаторы</h2>
+        <p class="theme">Два голоса из одной гортани — и главный секрет: слушают не уши, а глаза.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Техника</span>
+      <h3>Ближний и дальний голос</h3>
+      <p>«Ближний голос» (near voice) — когда кукла рядом; кажется, что звук пробивается прямо сквозь шею, это горловой, головной голос. «Дальний голос» (distant voice) — чревовещатель заворачивает язык внутри рта, поднимает гортань, рождается эхо и басы, и звук будто идёт из глубины, из-за стены.</p>
+    </div>
+
+    <div class="pull reveal">
+      <q>Слушают ваши глаза, а не уши</q>
+      <cite>Ухо не определяет источник звука — направление задаёт взгляд</cite>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Измерено фониатром</span>
+      <h3>Кристиан Габриэль и кукла Фреди</h3>
+      <p>Абитболь обследовал их и измерил механику. Когда «говорит» Фреди, диафрагма под полным контролем, а фаза выдоха длится больше пятнадцати секунд — время, нужное, чтобы «сложить» второй голос. Когда говорит сам Кристиан, выдох обычные семь-десять секунд. Голос он не форсирует — напрягает мышцы, как спортсмен.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Обман на уровне слов</span>
+      <h3>Подмена фонем</h3>
+      <p>Звуки «м», «ф», «п» требуют сомкнутых губ, а рот должен оставаться открытым. Поэтому артист произносит «эксика», а ваше левое полушарие само достраивает «Мексика». Не так важно, что мы услышим, важнее — как поймём.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Вехи</span>
+      <h3>От барона до Марка Метраля</h3>
+      <p>Барон с тряпичной куклой, которую офицер в испуге выхватил, приняв за живое существо; Фред Нимен в 1876 году вёл диалог сразу с семью марионетками; современник Марк Метраль в 2014-м покорил «Британия ищет таланты», первым выведя на сцену живого щенка, а до того выступал перед леди Ди.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">«Вокальный собор»</span>
+      <h3>Имитаторы</h3>
+      <p>Почти у 90% обследованных Абитболем имитаторов гортань асимметрична: сильные связки, подвижный надгортанник. Ключ в том, что имитатор умеет растягивать одну голосовую связку сильнее другой, создавая нужные обертоны по своему желанию. Поразительно: гортань иногда физически приобретала характеристики того, кого копируют, а имитаторы хриплых голосов зарабатывали узелки на связках.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Ключевая идея</span>
+      <h3>Внутренний и внешний голос</h3>
+      <p>Мы слышим себя через два контура: внутренний (через кости черепа, с усиленными низкими обертонами) и внешний (тот, что слышат другие). На записи внутренний контур пропадает, голос кажется выше и «холоднее» — потому мы себя не узнаём. Имитатор же имеет доступ к своему внешнему голосу и потому может лепить из него что угодно. Родоначальником эстрадного успеха этого искусства в 70-х был Тьерри Ле Люрон.</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 5 ================= -->
+<section class="chapter" id="ch5">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">05</div>
+      <div class="inner">
+        <div class="eyebrow">Глава пятая</div>
+        <h2>Власть гипноза</h2>
+        <p class="theme">Красивый парадокс: чтобы голос вёл, он должен стать монотонным и бесцветным — оставить всё место эмоциям слушателя.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Парадокс</span>
+      <h3>Монотонный голос</h3>
+      <p>Обычно, чтобы усилить власть голоса, в него добавляют эмоций. В гипнозе наоборот: голос должен быть монотонным, однообразным и абсолютно нейтральным — чтобы оставить место эмоциям самого пациента и ничего не навязывать. Монотонный тембр как бы проходит сквозь сознание, не встречая сопротивления.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">История и физиология</span>
+      <h3>Брейд, Сальпетриер, два сознания</h3>
+      <p>Гипноз — естественное состояние изменённого сознания, которое мы переживаем несколько раз в день, когда «уносимся мыслями». Термин ввёл в 1843 году шотландский врач Джеймс Брейд, наследник Месмера. Абитболь разделяет критическое сознание (анализирует, дробит, защищает) и гипнотическое (видит картину целиком, эмоциональное, образное).</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Техника</span>
+      <h3>Идти за пациентом и говорить на выдохе</h3>
+      <p>Два принципа. Говорить только на выдохе пациента, потому что глубокий выдох и есть условие расслабления. И важнейший: <b>надо идти за человеком туда, где он находится</b>. Возбуждённого бесполезно уговаривать «успокойтесь» — сначала говоришь энергично и быстро, синхронизируя своё дыхание с его (техника pacing), а поймав общую волну — снижаешь ритм и уводишь за собой.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Практический вывод</span>
+      <h3>Бессознательное не слышит отрицания</h3>
+      <p>Фраза «не волнуйтесь, это не больно, это не долго» доходит до бессознательного как «волнуйтесь», «больно», «долго». Поэтому слова употребляют только в позитивной форме. Но и это второстепенно — важнее сам голос: убаюкивающая интонация, которая «защищает, направляет и успокаивает». Тот же механизм объясняет транс от григорианских хоралов и тибетского горлового пения.</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 6 ================= -->
+<section class="chapter" id="ch6">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">06</div>
+      <div class="inner">
+        <div class="eyebrow">Глава шестая</div>
+        <h2>Голос правосудия</h2>
+        <p class="theme">Место, где власть голоса и паузы достигает апогея. Финал книги выстроен как настоящий théâtre.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Театр суда</span>
+      <h3>Красно-чёрный ритуал</h3>
+      <p>Красная мантия председателя, чёрные — заседателей, прокурора и защитника (память о старинной мантии с 33 пуговицами, по возрасту Христа). Прения полностью устные: ни один присяжный не имеет доступа к документам. Девять присяжных — «воплощённое молчание», которым запрещены даже междометия.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Голос до приговора</span>
+      <h3>«Он начинает существовать»</h3>
+      <p>Присяжные знакомятся с обвиняемым, когда он заговорит: голос раскроет его эмоциональный мир. Если голос неприятен, легко поверят в виновность, если привлекателен — в невиновность.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Дуэль голосов</span>
+      <h3>Прокурор и защитник</h3>
+      <p>Прокурор — трибун; его голос «обрушивается, словно молот», становится луком, а слова — стрелами. Андре Жид (1912): «Присяжные вжались в сиденья под напором яростных прений». Говорить слишком долго нельзя — голос устаёт. У защитника правильность тембра выдаёт не первое слово, а <b>пауза после него</b>: энергия не слишком сильная и не слишком слабая.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">1898 · голос на бумаге</span>
+      <h3>Эмиль Золя, «Я обвиняю»</h3>
+      <p>13 января 1898 года Золя опубликовал в газете L'Aurore открытое письмо в защиту Дрейфуса. Он писал от первого лица, глаголами действия, без намёков; его «Я обвиняю», словно вбитое молотком, звучало так, что этот текст мы и сегодня скорее слушаем, чем читаем. Ритм статьи — ритм живой разговорной речи, «мы почти слышим, как он переводит дыхание».</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Марсель · кульминация</span>
+      <h3>Вердикт маятника</h3>
+      <p>Поль Дюпон обвинён в убийстве жены Колетт — четыре удара ножом, затем пакет и ремень на шее. Перед совещанием всплывает отчёт судмедэксперта: причиной смерти было не ранение, а <b>удушение продолжительностью минуту и пять секунд</b>. Помощник прокурора вносит метровые маятниковые часы: «Сейчас мы будем слушать эти часы шестьдесят пять секунд». Маятник качается в невыносимой тишине, и звучит финальное: «Сейчас вы пережили агонию этой бедной женщины». Вердикт — виновен без смягчающих обстоятельств.</p>
+    </div>
+
+    <div class="pull crimson reveal">
+      <q>Власть молчания — не это ли высшее проявление власти голоса?</q>
+      <cite>Абитболь — вывод, закрывающий всю книгу</cite>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Античный исток</span>
+      <h3>Эсхил и «внутреннее убеждение»</h3>
+      <p>Абитболь возводит весь ритуал суда присяжных к «Эвменидам» Эсхила: чтобы судить Ореста, Афина впервые доверяет решение смертным, а не богам; голоса делятся поровну, и её собственный голос — по сути, «внутреннее убеждение» — даёт оправдание. Отсюда и статья 353 французского УПК, которая задаёт присяжным единственный вопрос: «Есть ли у вас внутреннее убеждение?»</p>
+    </div>
+
+    <div class="divider" data-bars="70" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ================= CH 7 ================= -->
+<section class="chapter" id="ch7">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="ghost-n" aria-hidden="true">07</div>
+      <div class="inner">
+        <div class="eyebrow">Заключение</div>
+        <h2>Будущее в поисках своего голоса</h2>
+        <p class="theme">От внешнего голоса — к беззвучному внутреннему, который наука учится читать напрямую.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Нейрофизиология</span>
+      <h3>Чтение внутреннего голоса</h3>
+      <p>Слышимый голос и голос «внутренний» мобилизуют одни и те же нейронные цепочки. Значит, похожие датчики можно использовать, чтобы расшифровать внутренний голос — и услышать того, кто не может или не желает говорить после шока. Этим занимаются профессор Брайан Пейсли из Беркли и команда Стефани Мартэн из Лозанны. Возможно, скоро мы услышим через наушники внутренний беззвучный голос.</p>
+    </div>
+
+    <div class="entry reveal">
+      <span class="tag">Итог</span>
+      <h3>Круг замыкается на тишине</h3>
+      <p>Исследование власти голоса завершается темой молчания, которое заставляет вернуться к себе и своему внутреннему голосу — к тому, что Абитболь называет «таинственным садом».</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="eyebrow">Об источнике</div>
+    <h4>Жан Абитболь · «Власть голоса»</h4>
+    <p>Конспект собран по книге фониатра Жана Абитболя. Отдельные примеры дополнены материалом из книг Виктора Шахиджаняна («Ораторское искусство для начинающих»), Кармина Гэллоу («Презентации в стиле TED») и Криса Андерсона («TED Talks»).</p>
+    <p>Структура тематическая: семь глав повторяют смысловую арку книги — от голосов политиков и диктаторов до пения, иллюзий, гипноза и суда, где всё сходится в тишине.</p>
+    <div class="src">
+      Основной источник: <span>Ж. Абитболь. «Власть голоса»</span><br>
+      Дополнительно: <span>Шахиджанян · Гэллоу · Андерсон</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // pseudo-random speech-like envelope: word clusters + pauses
+  function speech(n, seed){
+    var a=[], s=seed||7;
+    function rnd(){ s=(s*9301+49297)%233280; return s/233280; }
+    var pause=0;
+    for(var i=0;i<n;i++){
+      if(pause>0){ a.push(0.06+rnd()*0.05); pause--; continue; }
+      if(rnd()<0.10){ pause=1+Math.floor(rnd()*3); a.push(0.06+rnd()*0.05); continue; }
+      var env=Math.abs(Math.sin(i*0.19)+0.6*Math.sin(i*0.53)+0.4*Math.sin(i*1.1));
+      var h=0.18+0.82*Math.min(1, env*(0.5+rnd()*0.7));
+      a.push(h);
+    }
+    return a;
+  }
+
+  function fill(el, n, seed){
+    var vals=speech(n, seed);
+    var frag=document.createDocumentFragment();
+    for(var i=0;i<n;i++){
+      var b=document.createElement('i');
+      b.style.height=(vals[i]*100)+'%';
+      if(el.classList.contains('hero-wave') && !reduce){
+        b.style.animationDelay=(i*0.045)+'s';
+      }
+      frag.appendChild(b);
+    }
+    el.appendChild(frag);
+  }
+
+  var hero=document.getElementById('heroWave');
+  if(hero) fill(hero, 130, 11);
+
+  document.querySelectorAll('.divider').forEach(function(d,idx){
+    fill(d, parseInt(d.getAttribute('data-bars'))||70, 23+idx*5);
+  });
+
+  // scroll reveal
+  if(!reduce && 'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    },{threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
+
+</body>
+</html>
