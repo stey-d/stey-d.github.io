@@ -1,9 +1,456 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Сайт steyd</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заметки на полях</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EDEEF2;
+    --bg-deep: #E2E4EA;
+    --ink: #21223A;
+    --ink-soft: #585B78;
+    --gold: #B6871A;
+    --brick: #9A3E33;
+    --line: #CDD0DB;
+    --card: #F6F6F9;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color:inherit; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---------- header ---------- */
+
+  header{
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 26px 0;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .wordmark{
+    display:flex;
+    align-items:baseline;
+    gap: 10px;
+  }
+  .wordmark .dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    display:inline-block;
+    transform: translateY(-2px);
+  }
+  .wordmark span.title{
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+  }
+  .wordmark span.sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  nav{
+    display:flex;
+    align-items:center;
+    gap: 30px;
+  }
+  nav a{
+    text-decoration:none;
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  nav a:hover, nav a:focus-visible{ color: var(--ink); border-color: var(--gold); }
+  nav a:focus-visible{ outline: 2px solid var(--brick); outline-offset: 3px; }
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    padding: 90px 0 70px;
+    position: relative;
+  }
+
+  .quote-mark{
+    font-family: 'Instrument Serif', serif;
+    font-size: 150px;
+    line-height: 1;
+    color: var(--gold);
+    opacity: 0.35;
+    position: absolute;
+    top: 18px;
+    left: -14px;
+    user-select: none;
+    z-index: 0;
+  }
+
+  .hero-inner{ position: relative; z-index: 1; max-width: 720px; }
+
+  h1{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(38px, 5.6vw, 60px);
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+  h1 .underline-wrap{
+    position: relative;
+    display: inline-block;
+  }
+  h1 .underline-wrap svg{
+    position: absolute;
+    left: -2%;
+    bottom: -10px;
+    width: 104%;
+    height: 16px;
+  }
+
+  .hero p.lede{
+    font-size: 17.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 26px 0 0;
+  }
+
+  /* ---------- featured / first post ---------- */
+
+  .section-label{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    font-size: 12.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin: 0 0 24px;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .first-post{
+    padding: 20px 0 70px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .post-card{
+    display:grid;
+    grid-template-columns: 84px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 640px){
+    .post-card{ grid-template-columns: 1fr; }
+  }
+
+  .post-number{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--line);
+    line-height: 1;
+  }
+
+  .post-card h2{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.18;
+    margin: 0 0 16px;
+  }
+  .post-card h2 a{
+    text-decoration:none;
+    color: var(--ink);
+    background-image: linear-gradient(var(--brick), var(--brick));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 2px;
+    transition: background-size .25s ease;
+    padding-bottom: 2px;
+  }
+  .post-card h2 a:hover, .post-card h2 a:focus-visible{ background-size: 100% 2px; }
+  .post-card h2 a:focus-visible{ outline: 2px solid var(--brick); outline-offset: 4px; }
+
+  .post-card p{
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 58ch;
+    margin: 0 0 20px;
+  }
+
+  .post-meta{
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .post-meta .tag{
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .read-more{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink);
+    margin-top: 6px;
+  }
+  .read-more:hover .arrow{ transform: translateX(4px); }
+  .arrow{ transition: transform .18s ease; display:inline-block; }
+
+  /* ---------- topics index ---------- */
+
+  .topics{
+    padding: 62px 0 70px;
+  }
+
+  .topics-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 780px){
+    .topics-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px){
+    .topics-grid{ grid-template-columns: 1fr; }
+  }
+
+  .topic-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 22px 20px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .topic-card:hover{ border-color: var(--gold); transform: translateY(-2px); }
+
+  .topic-card h3{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 21px;
+    margin: 0 0 8px;
+  }
+  .topic-card p{
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* ---------- subscribe ---------- */
+
+  .strip{
+    border-top: 1px solid var(--line);
+    padding: 46px 0;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .strip h4{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 24px;
+    margin: 0 0 6px;
+  }
+  .strip p{ margin:0; color: var(--ink-soft); font-size: 14px; }
+
+  .field{
+    display:flex;
+    border-bottom: 1.5px solid var(--ink);
+    max-width: 360px;
+    width: 100%;
+  }
+  .field input{
+    flex:1;
+    border:0;
+    background: transparent;
+    padding: 10px 0;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .field input::placeholder{ color: var(--ink-soft); }
+  .field input:focus{ outline: none; }
+  .field button{
+    border:0;
+    background: transparent;
+    color: var(--brick);
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    padding: 0 0 0 14px;
+  }
+  .field button:hover{ text-decoration: underline; }
+  .field button:focus-visible{ outline: 2px solid var(--brick); outline-offset: 3px; }
+
+  /* ---------- footer ---------- */
+
+  footer{
+    padding: 28px 0 42px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  footer a{ text-decoration:none; }
+  footer a:hover{ color: var(--brick); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+</style>
 </head>
 <body>
-    <h1>Привет! Это мой личный сайт.</h1>
+
+<header>
+  <div class="wrap header-row">
+    <div class="wordmark">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="title">Заметки</span>
+      <span class="sub">на полях</span>
+    </div>
+    <nav aria-label="Основная навигация">
+      <a href="#topics">Темы</a>
+      <a href="#about">Об авторе</a>
+      <a href="#subscribe">Подписка</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="quote-mark" aria-hidden="true">“</div>
+    <div class="hero-inner">
+      <h1>
+        <span class="underline-wrap">
+          Тексты обо всём
+          <svg viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 10 C 60 2, 120 14, 180 6 S 260 2, 298 9" fill="none" stroke="#B6871A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span><br>
+        что не даёт покоя
+      </h1>
+      <p class="lede">Блог без единой темы: то технологии, то случайная мысль в очереди, то книга, которая испортила вечер. Пишу, когда есть что сказать, а не по графику.</p>
+    </div>
+  </section>
+
+  <section class="first-post">
+    <p class="section-label">Первая запись</p>
+    <div class="post-card">
+      <div class="post-number" aria-hidden="true">01</div>
+      <div>
+        <h2><a href="vlast-golosa.html">Власть голоса</a></h2>
+        <p>О том, почему то, как мы говорим, решает больше, чем то, что мы говорим — и как это работает не только на сцене, но и в обычном разговоре, где, кажется, ставок нет вовсе.</p>
+        <div class="post-meta">
+          <span class="tag">Общество</span>
+          <span>8 августа 2026</span>
+          <span>·</span>
+          <span>6 мин чтения</span>
+        </div>
+        <a class="read-more" href="vlast-golosa.html">Читать полностью <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="topics" id="topics">
+    <p class="section-label">О чём будет блог</p>
+    <div class="topics-grid">
+      <div class="topic-card">
+        <h3>Технологии</h3>
+        <p>Инструменты, которые действительно экономят время, и те, что только притворяются.</p>
+      </div>
+      <div class="topic-card">
+        <h3>Общество</h3>
+        <p>Наблюдения за тем, как устроены разговоры, споры и молчание между людьми.</p>
+      </div>
+      <div class="topic-card">
+        <h3>Книги</h3>
+        <p>Не рецензии, а то, что осталось в голове спустя неделю после прочтения.</p>
+      </div>
+      <div class="topic-card">
+        <h3>Жизнь в Киеве</h3>
+        <p>Город, привычки, мелочи, которые складываются в ощущение дома.</p>
+      </div>
+      <div class="topic-card">
+        <h3>Работа</h3>
+        <p>Заметки из профессии, которые не привязаны к одной специальности.</p>
+      </div>
+      <div class="topic-card">
+        <h3>Разное</h3>
+        <p>Всё, что не влезло в остальные рубрики, но слишком хорошо, чтобы не написать.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="strip" id="subscribe">
+    <div>
+      <h4>Новые записи — без расписания</h4>
+      <p>Письмо приходит только тогда, когда есть, что сказать.</p>
+    </div>
+    <form class="field" onsubmit="event.preventDefault();">
+      <label for="email" style="position:absolute;left:-9999px;">Электронная почта</label>
+      <input id="email" type="email" placeholder="ваш@email.com" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Заметки на полях</span>
+  <span>
+    <a href="#topics">Темы</a> ·
+    <a href="#about" id="about">Об авторе</a> ·
+    <a href="#">RSS</a>
+  </span>
+</footer>
+
 </body>
 </html>
