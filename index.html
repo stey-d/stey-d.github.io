@@ -1,422 +1,143 @@
-
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Черновик — блог обо всём</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --paper: #FAFAF7;
-    --paper-card: #FFFFFF;
-    --ink: #0B0B0B;
-    --ink-soft: #5B5B5B;
-    --red: #E63946;
-    --tape: #F2E9C9;
-    --line: #E2E1DA;
-  }
-
-  *{ box-sizing: border-box; }
-
-  body{
-    margin:0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a{ color:inherit; }
-
-  .wrap{
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
-
-  .hand{ font-family: 'Caveat', cursive; }
-  .black{ font-family: 'Archivo Black', sans-serif; }
-
-  /* ---------- header ---------- */
-
-  header{
-    border-bottom: 3px solid var(--ink);
-  }
-  .header-row{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    padding: 22px 0;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .logo{
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 24px;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-  }
-  nav{ display:flex; gap: 24px; }
-  nav a{
-    text-decoration:none;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--ink);
-    position: relative;
-  }
-  nav a::after{
-    content:"";
-    position:absolute;
-    left:0; right:0; bottom:-4px;
-    height: 3px;
-    background: var(--red);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .18s ease;
-  }
-  nav a:hover::after, nav a:focus-visible::after{ transform: scaleX(1); }
-  nav a:focus-visible{ outline: 2px solid var(--red); outline-offset: 4px; }
-
-  /* ---------- hero ---------- */
-
-  .hero{
-    padding: 70px 0 60px;
-    position: relative;
-  }
-
-  .tape{
-    position: absolute;
-    top: -14px;
-    left: 28px;
-    background: var(--tape);
-    padding: 5px 18px 7px;
-    transform: rotate(-4deg);
-    font-family: 'Caveat', cursive;
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--ink);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
-  }
-  @media (max-width: 600px){ .tape{ left: 0; } }
-
-  h1{
-    font-family: 'Archivo Black', sans-serif;
-    font-size: clamp(34px, 6vw, 64px);
-    line-height: 1.02;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    margin: 30px 0 0;
-    max-width: 14ch;
-  }
-  h1 .mark{
-    background: var(--red);
-    color: #fff;
-    padding: 0 10px;
-    display: inline-block;
-    transform: rotate(-1deg);
-  }
-
-  .hero p.lede{
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    max-width: 50ch;
-    margin: 26px 0 0;
-  }
-
-  /* ---------- section label ---------- */
-
-  .section-label{
-    display:flex;
-    align-items:baseline;
-    gap: 14px;
-    padding: 8px 0 26px;
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 15px;
-    text-transform: uppercase;
-  }
-  .section-label .hand{
-    font-family: 'Caveat', cursive;
-    font-size: 20px;
-    color: var(--red);
-    text-transform: none;
-  }
-
-  /* ---------- pinboard ---------- */
-
-  .board{
-    padding: 40px 0 20px;
-    border-top: 3px solid var(--ink);
-  }
-
-  .cards{
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 46px 36px;
-    padding-bottom: 20px;
-  }
-  @media (max-width: 700px){
-    .cards{ grid-template-columns: 1fr; gap: 40px; }
-  }
-
-  .card{
-    background: var(--paper-card);
-    border: 2px solid var(--ink);
-    padding: 26px 24px 22px;
-    position: relative;
-    transition: transform .18s ease;
-  }
-  .card:nth-child(1){ transform: rotate(-1.4deg); }
-  .card:nth-child(2){ transform: rotate(1deg); }
-  .card:hover{ transform: rotate(0deg) translateY(-3px); }
-
-  .pin{
-    position:absolute;
-    top: -11px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--red);
-    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
-  }
-
-  .card-tag{
-    display:inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    border: 2px solid var(--ink);
-    padding: 3px 9px;
-    margin-bottom: 16px;
-  }
-
-  .card h2{
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 24px;
-    line-height: 1.18;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-  }
-  .card h2 a{
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .card h2 a:hover, .card h2 a:focus-visible{ color: var(--red); }
-  .card h2 a:focus-visible{ outline: 2px solid var(--red); outline-offset: 4px; }
-
-  .card p{
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    margin: 0 0 18px;
-  }
-
-  .card-foot{
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    font-size: 12px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--ink);
-  }
-  .card-foot a{
-    text-decoration:none;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 12px;
-    color: var(--ink);
-  }
-  .card-foot a:hover{ color: var(--red); }
-
-  /* ---------- topics ---------- */
-
-  .topics{
-    padding: 50px 0 60px;
-    border-top: 3px solid var(--ink);
-  }
-  .topics-list{
-    display:flex;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-  .chip{
-    text-decoration:none;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--ink);
-    border: 2px solid var(--ink);
-    padding: 8px 16px;
-    transition: background .15s ease, color .15s ease;
-  }
-  .chip:hover, .chip:focus-visible{ background: var(--ink); color: var(--paper); }
-  .chip:focus-visible{ outline: 2px solid var(--red); outline-offset: 3px; }
-
-  /* ---------- subscribe ---------- */
-
-  .strip{
-    background: var(--ink);
-    color: var(--paper);
-    padding: 44px 0;
-  }
-  .strip-inner{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .strip h4{
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 22px;
-    text-transform: uppercase;
-    margin: 0 0 8px;
-  }
-  .strip p{ margin:0; color: #B9B9B9; font-size: 13.5px; }
-
-  .field{
-    display:flex;
-    max-width: 360px;
-    width: 100%;
-    border: 2px solid var(--paper);
-  }
-  .field input{
-    flex:1;
-    border:0;
-    background: transparent;
-    padding: 12px 14px;
-    font-size: 13.5px;
-    color: var(--paper);
-  }
-  .field input::placeholder{ color: #999; }
-  .field input:focus{ outline: none; }
-  .field button{
-    border:0;
-    border-left: 2px solid var(--paper);
-    background: var(--red);
-    color: #fff;
-    padding: 0 18px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .field button:hover{ background: #c72a37; }
-  .field button:focus-visible{ outline: 2px solid #fff; outline-offset: -4px; }
-
-  /* ---------- footer ---------- */
-
-  footer{
-    padding: 24px 0 40px;
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    flex-wrap: wrap;
-    gap: 12px;
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-  footer a{ text-decoration:none; }
-  footer a:hover{ color: var(--red); }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ transition: none !important; }
-  }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
 <body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/classical-40ab79b3-7aaf-4296-84ca-34c37656daac/styles.css">
+<script src="_ds/classical-40ab79b3-7aaf-4296-84ca-34c37656daac/_ds_bundle.js"></script>
+<style>
+  body{ margin:0; }
+  @keyframes ticker-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none !important; } }
+</style>
+</helmet>
 
-<header>
-  <div class="wrap header-row">
-    <div class="logo">Черновик</div>
-    <nav aria-label="Основная навигация">
-      <a href="#board">Статьи</a>
-      <a href="#topics">Темы</a>
-      <a href="#about">Об авторе</a>
-      <a href="#subscribe">Подписка</a>
-    </nav>
-  </div>
-</header>
+<div style="background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); min-height:100vh;">
 
-<main class="wrap">
+  <nav class="nav">
+    <span class="nav-brand">Черновик</span>
+    <a href="#board" aria-current="page">Статьи</a>
+    <a href="#tags">Теги</a>
+    <a href="#subscribe">Подписка</a>
+  </nav>
 
-  <section class="hero">
-    <div class="tape">выпуск первый</div>
-    <h1>Блог без <span class="mark">одной темы</span></h1>
-    <p class="lede">Заметки обо всём, что зацепило: технологии, город, архитектура, случайные мысли в очереди. Без графика, без рубрик ради рубрик.</p>
-  </section>
+  <a href="uploads/CTI_Daily_Report_2026-08-13.html" style="display:block; text-decoration:none; overflow:hidden; border-bottom:1px solid var(--color-divider); background:var(--color-neutral-100);">
+    <div class="ticker-track" style="display:flex; white-space:nowrap; animation:ticker-scroll 55s linear infinite; padding: var(--space-3) 0;">
+      <span style="display:flex; gap: var(--space-8); padding-right: var(--space-8);">
+        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;">CTI · 13.08.2026 — обновляется ежедневно</span>
+        <span style="color:var(--color-text); font-size:14px;">CVE-2026-68820 — Windows AFD.sys 0-day, активно эксплуатируется Lazarus (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">CVE-2026-55040 — SharePoint JWT Auth Bypass, эксплуатация в первые часы после PoC (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">ShieldBreak — 0-day обхода Microsoft Defender, патча нет (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">DeadLock ransomware перенёс C2 на блокчейн Polygon, 80+ жертв (High)</span>
+        <span style="color:var(--color-text); font-size:14px;">Sandworm / UAC-0145 — фейковые собеседования с троянским WireGuard (High)</span>
+        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700;">→ читать полный отчёт</span>
+      </span>
+      <span style="display:flex; gap: var(--space-8); padding-right: var(--space-8);">
+        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;">CTI · 13.08.2026 — обновляется ежедневно</span>
+        <span style="color:var(--color-text); font-size:14px;">CVE-2026-68820 — Windows AFD.sys 0-day, активно эксплуатируется Lazarus (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">CVE-2026-55040 — SharePoint JWT Auth Bypass, эксплуатация в первые часы после PoC (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">ShieldBreak — 0-day обхода Microsoft Defender, патча нет (Critical)</span>
+        <span style="color:var(--color-text); font-size:14px;">DeadLock ransomware перенёс C2 на блокчейн Polygon, 80+ жертв (High)</span>
+        <span style="color:var(--color-text); font-size:14px;">Sandworm / UAC-0145 — фейковые собеседования с троянским WireGuard (High)</span>
+        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700;">→ читать полный отчёт</span>
+      </span>
+    </div>
+  </a>
 
-  <section class="board" id="board">
-    <p class="section-label">На доске <span class="hand">приколото булавкой</span></p>
-    <div class="cards">
+  <main style="max-width:1080px; margin:0 auto; padding: 0 32px;">
 
-      <article class="card">
-        <div class="pin" aria-hidden="true"></div>
-        <span class="card-tag">Общество</span>
-        <h2><a href="vlast-golosa.html">Власть голоса</a></h2>
-        <p>Почему то, как мы говорим, решает больше, чем то, что мы говорим — и как это работает не только на сцене, но и в обычном разговоре.</p>
-        <div class="card-foot">
-          <span>6 мин</span>
-          <a href="vlast-golosa.html">Читать →</a>
-        </div>
-      </article>
+    <section style="padding: var(--space-10) 0 var(--space-8);">
+      <h1 style="font-family:var(--font-heading); font-weight:var(--font-heading-weight); font-size:clamp(38px,6vw,64px); line-height:1.05; margin:0; max-width:16ch;">Блог без одной темы</h1>
+      <p style="font-size:18px; line-height:1.65; color:var(--color-neutral-700); max-width:52ch; margin: var(--space-4) 0 0; text-align:justify;">Заметки обо всём, что зацепило: технологии, город, архитектура, случайные мысли в очереди. Без графика, без рубрик ради рубрик — только теги.</p>
+    </section>
 
-      <article class="card">
-        <div class="pin" aria-hidden="true"></div>
-        <span class="card-tag">Архитектура</span>
-        <h2><a href="architecture-elegance.html">Архитектура элегантности</a></h2>
-        <p>Что делает пространство красивым не по моде, а по сути — и почему элегантность почти всегда про то, что убрали, а не добавили.</p>
-        <div class="card-foot">
-          <span>7 мин</span>
-          <a href="architecture-elegance.html">Читать →</a>
-        </div>
-      </article>
+    <section id="board" style="padding: var(--space-6) 0 var(--space-4); border-top:1px solid var(--color-divider);">
+      <p style="font-family:var(--font-heading); font-size:15px; text-transform:uppercase; letter-spacing:0.04em; margin: 0 0 var(--space-6);">Последние статьи</p>
 
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap: var(--space-6);">
+
+        <article class="card">
+          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);"><span class="tag tag-outline">Общество</span></div>
+          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="vlast-golosa.html" style="text-decoration:none; color:inherit;">Власть голоса</a></h2>
+          <p class="card-body">Почему то, как мы говорим, решает больше, чем то, что мы говорим — и как это работает не только на сцене, но и в обычном разговоре.</p>
+          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
+            <span>6 мин</span>
+            <a href="vlast-golosa.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);"><span class="tag tag-outline">Архитектура</span></div>
+          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="architecture-elegance.html" style="text-decoration:none; color:inherit;">Архитектура элегантности</a></h2>
+          <p class="card-body">Что делает пространство красивым не по моде, а по сути — и почему элегантность почти всегда про то, что убрали, а не добавили.</p>
+          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
+            <span>7 мин</span>
+            <a href="architecture-elegance.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);">
+            <span class="tag tag-outline">Безопасность</span>
+            <span class="tag tag-outline">Мессенджеры</span>
+          </div>
+          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="messenger-security-privacy-guide.html" style="text-decoration:none; color:inherit;">Гид по безопасности и приватности в мессенджерах</a></h2>
+          <p class="card-body">Разбираем шифрование, метаданные и настройки приватности в популярных мессенджерах — что реально защищает переписку, а что просто выглядит защищённым.</p>
+          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
+            <span>9 мин</span>
+            <a href="messenger-security-privacy-guide.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="tags" style="padding: var(--space-8) 0 var(--space-10); border-top:1px solid var(--color-divider);">
+      <p style="font-family:var(--font-heading); font-size:15px; text-transform:uppercase; letter-spacing:0.04em; margin: 0 0 var(--space-6);">Теги</p>
+      <div style="display:flex; flex-wrap:wrap; gap: var(--space-3);">
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Технологии</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Архитектура</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Общество</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Безопасность</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Мессенджеры</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">CTI</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Книги</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Жизнь в Киеве</a>
+        <a href="#" class="tag tag-outline" style="text-decoration:none;">Разное</a>
+      </div>
+    </section>
+
+  </main>
+
+  <section id="subscribe" style="background:var(--color-neutral-900); color:var(--color-bg); padding: var(--space-8) 0;">
+    <div style="max-width:1080px; margin:0 auto; padding:0 32px; display:flex; align-items:center; justify-content:space-between; gap:var(--space-6); flex-wrap:wrap;">
+      <div>
+        <h4 style="font-family:var(--font-heading); font-size:22px; margin:0 0 var(--space-2);">Новое — без расписания</h4>
+        <p style="margin:0; color:var(--color-neutral-300); font-size:14px;">Письмо приходит только тогда, когда есть, что сказать.</p>
+      </div>
+      <form style="display:flex; max-width:360px; width:100%; gap:var(--space-2);" onsubmit="event.preventDefault();">
+        <label for="email" style="position:absolute; left:-9999px;">Электронная почта</label>
+        <input id="email" type="email" placeholder="ваш@email.com" required class="input" style="flex:1;">
+        <button type="submit" class="btn btn-primary">Подписаться</button>
+      </form>
     </div>
   </section>
 
-  <section class="topics" id="topics">
-    <p class="section-label">Темы</p>
-    <div class="topics-list">
-      <a class="chip" href="#">Технологии</a>
-      <a class="chip" href="#">Архитектура</a>
-      <a class="chip" href="#">Общество</a>
-      <a class="chip" href="#">Книги</a>
-      <a class="chip" href="#">Жизнь в Киеве</a>
-      <a class="chip" href="#">Разное</a>
-    </div>
-  </section>
+  <footer style="max-width:1080px; margin:0 auto; padding: var(--space-5) 32px var(--space-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: var(--space-3); font-size:13px; color:var(--color-neutral-700);">
+    <span>© 2026 Черновик</span>
+    <span style="display:flex; gap:var(--space-4);">
+      <a href="#tags" style="text-decoration:none; color:inherit;">Теги</a>
+      <a href="#" style="text-decoration:none; color:inherit;">RSS</a>
+    </span>
+  </footer>
 
-</main>
+</div>
 
-<section class="strip" id="subscribe">
-  <div class="wrap strip-inner">
-    <div>
-      <h4>Новое — без расписания</h4>
-      <p>Письмо приходит только тогда, когда есть, что сказать.</p>
-    </div>
-    <form class="field" onsubmit="event.preventDefault();">
-      <label for="email" style="position:absolute;left:-9999px;">Электронная почта</label>
-      <input id="email" type="email" placeholder="ваш@email.com" required>
-      <button type="submit">Подписаться</button>
-    </form>
-  </div>
-</section>
-
-<footer class="wrap">
-  <span>© 2026 Черновик</span>
-  <span>
-    <a href="#topics">Темы</a> ·
-    <a href="#about" id="about">Об авторе</a> ·
-    <a href="#">RSS</a>
-  </span>
-</footer>
-
+</x-dc>
 </body>
 </html>
