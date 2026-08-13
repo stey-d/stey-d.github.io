@@ -1,143 +1,852 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Один слухач чи тисяча — принципи ті самі</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #E7EBEF;
+    --surface: #F3F5F7;
+    --surface-2: #EAEEF1;
+    --indigo: #38508C;
+    --indigo-dim: #38508C33;
+    --coral: #E4634C;
+    --coral-dim: #E4634C2e;
+    --text: #1E2430;
+    --text-muted: #4B5568;
+    --text-faint: #8A93A3;
+    --line: rgba(30,36,48,0.10);
+    --line-strong: rgba(30,36,48,0.20);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'PT Serif', serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--coral-dim); color:var(--text);}
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 32px;}
+
+  .progress{position:fixed; top:0; left:0; height:2px; background:var(--indigo); z-index:100; width:0%; transition:width .1s linear;}
+
+  /* ================= HERO ================= */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding:120px 0 80px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .hero-audience{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-56%);
+    width:min(720px, 92vw);
+    height:340px;
+    pointer-events:none;
+    opacity:0.85;
+  }
+
+  .dot{
+    position:absolute;
+    border-radius:50%;
+    background:var(--indigo-dim);
+    animation:pulse 4.5s ease-in-out infinite;
+  }
+  .dot.center{background:var(--coral); box-shadow:0 0 22px 4px var(--coral-dim); animation:pulseCenter 4.5s ease-in-out infinite;}
+
+  @keyframes pulse{
+    0%,100%{opacity:.35; transform:scale(1);}
+    50%{opacity:.7; transform:scale(1.12);}
+  }
+  @keyframes pulseCenter{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:.82; transform:scale(1.08);}
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--indigo);
+    margin-bottom:28px;
+    position:relative; z-index:2;
+  }
+
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(36px, 6vw, 62px);
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    max-width:820px;
+    position:relative; z-index:2;
+    margin-bottom:28px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--coral);
+  }
+
+  .hero-sub{
+    max-width:560px;
+    color:var(--text-muted);
+    font-size:17.5px;
+    position:relative; z-index:2;
+    margin-bottom:40px;
+    text-align:justify;
+    text-justify:inter-word;
+    text-indent:2em;
+    hyphens:auto;
+  }
+
+  .hero-meta{
+    display:flex; gap:28px; flex-wrap:wrap;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-faint);
+    position:relative; z-index:2;
+  }
+  .hero-meta span{display:flex; align-items:center; gap:8px;}
+  .hero-meta span::before{content:''; width:5px; height:5px; border-radius:50%; background:var(--indigo);}
+
+  /* ================= SECTIONS ================= */
+  section.principle{
+    padding:96px 0;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  section.principle.visible{opacity:1; transform:translateY(0);}
+
+  .p-head{
+    display:grid;
+    grid-template-columns:80px 1fr;
+    gap:28px;
+    margin-bottom:36px;
+  }
+
+  .p-num{
+    font-family:'Fraunces', serif;
+    font-size:56px;
+    font-weight:600;
+    color:transparent;
+    -webkit-text-stroke:1.4px var(--line-strong);
+    line-height:1;
+  }
+
+  .p-eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--coral);
+    margin-bottom:10px;
+  }
+
+  .p-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px, 3.4vw, 36px);
+    line-height:1.2;
+  }
+
+  .p-body{
+    display:grid;
+    grid-template-columns:80px 1fr;
+    gap:28px;
+  }
+
+  .p-content{color:var(--text-muted); font-size:16px; font-family:'PT Serif', serif;}
+  .p-content p{margin-bottom:18px; max-width:640px; text-align:justify; text-justify:inter-word; text-indent:2em; hyphens:auto;}
+  .p-content p strong{color:var(--text); font-weight:700;}
+
+  .quote-block{
+    margin:26px 0 26px 0;
+    padding:20px 24px;
+    background:var(--surface);
+    border-left:3px solid var(--indigo);
+    border-radius:2px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:18px;
+    color:var(--text);
+    max-width:600px;
+  }
+  .quote-source{
+    display:block;
+    margin-top:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-style:normal;
+    font-size:11px;
+    letter-spacing:.06em;
+    color:var(--text-faint);
+    text-transform:uppercase;
+  }
+
+  .mini-list{list-style:none; max-width:620px; margin:18px 0;}
+  .mini-list li{
+    position:relative;
+    padding-left:22px;
+    margin-bottom:11px;
+    color:var(--text-muted);
+    font-family:'PT Serif', serif;
+  }
+  .mini-list li::before{
+    content:'';
+    position:absolute; left:0; top:9px;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--indigo);
+  }
+  .mini-list li strong{color:var(--text); font-weight:700;}
+
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    max-width:640px;
+    margin:20px 0;
+  }
+  .box{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:18px 20px;
+  }
+  .box-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .box.good .box-title{color:var(--indigo);}
+  .box.bad .box-title{color:var(--coral);}
+  .box p{color:var(--text-muted); font-size:14.5px; margin:0; font-family:'PT Serif', serif;}
+
+  /* ================= SCALE TABLE ================= */
+  .scale-section{padding:96px 0; border-bottom:1px solid var(--line);}
+  .scale-head{max-width:640px; margin-bottom:40px;}
+  .scale-head .p-eyebrow{color:var(--indigo);}
+  .scale-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px,3.4vw,36px);
+    margin-top:10px;
+  }
+  .scale-head p{color:var(--text-muted); margin-top:16px; font-size:16px; font-family:'PT Serif', serif;}
+
+  .scale-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .scale-col{background:var(--surface); padding:22px 18px;}
+  .scale-col.head{background:var(--surface-2);}
+  .scale-col .n{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--coral);
+    margin-bottom:6px;
+  }
+  .scale-col .t{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+    margin-bottom:14px;
+  }
+  .scale-col ul{list-style:none; font-size:13.5px; color:var(--text-muted); font-family:'PT Serif', serif;}
+  .scale-col li{margin-bottom:9px; padding-left:14px; position:relative;}
+  .scale-col li::before{content:'—'; position:absolute; left:0; color:var(--text-faint);}
+
+  .constant-strip{
+    margin-top:24px;
+    display:flex; align-items:center; gap:14px;
+    padding:16px 20px;
+    background:var(--surface);
+    border:1px dashed var(--line-strong);
+    border-radius:6px;
+    font-size:14px;
+    color:var(--text-muted);
+    font-family:'PT Serif', serif;
+  }
+  .constant-strip strong{color:var(--indigo); font-weight:700; white-space:nowrap; font-family:'Fraunces', serif;}
+
+  /* ================= CHECKLIST ================= */
+  .checklist-section{padding:96px 0; border-bottom:1px solid var(--line);}
+  .checklist-head{max-width:640px; margin-bottom:36px;}
+  .checklist-head .p-eyebrow{color:var(--coral);}
+  .checklist-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px,3.4vw,36px);
+    margin-top:10px;
+  }
+
+  .check-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .check-item{
+    display:flex; gap:14px;
+    padding:16px 18px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:4px;
+  }
+  .check-box{
+    flex-shrink:0;
+    width:18px; height:18px;
+    border:1.5px solid var(--indigo);
+    border-radius:4px;
+    margin-top:2px;
+  }
+  .check-item p{font-size:14px; color:var(--text-muted); font-family:'PT Serif', serif;}
+  .check-item p strong{color:var(--text); display:block; font-size:14.5px; margin-bottom:3px; font-weight:700; font-family:'Fraunces', serif;}
+
+  /* ================= CLOSING ================= */
+  .closing{
+    padding:120px 0 140px;
+    text-align:center;
+  }
+  .closing-mark{
+    width:10px; height:10px; border-radius:50%;
+    background:var(--coral);
+    margin:0 auto 32px;
+    box-shadow:0 0 20px 4px var(--coral-dim);
+  }
+  .closing h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(24px, 3.6vw, 34px);
+    max-width:640px;
+    margin:0 auto 20px;
+    line-height:1.35;
+  }
+  .closing p{color:var(--text-faint); font-size:14px; font-family:'JetBrains Mono', monospace;}
+
+  @media (max-width:720px){
+    .wrap{padding:0 22px;}
+    .p-head, .p-body{grid-template-columns:44px 1fr; gap:14px;}
+    .p-num{font-size:34px;}
+    .two-col{grid-template-columns:1fr;}
+    .scale-grid{grid-template-columns:1fr; }
+    .check-grid{grid-template-columns:1fr;}
+    .hero-audience{display:none;}
+    .hero{padding:100px 0 60px;}
+  }
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-<link rel="stylesheet" href="_ds/classical-40ab79b3-7aaf-4296-84ca-34c37656daac/styles.css">
-<script src="_ds/classical-40ab79b3-7aaf-4296-84ca-34c37656daac/_ds_bundle.js"></script>
-<style>
-  body{ margin:0; }
-  @keyframes ticker-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none !important; } }
-</style>
-</helmet>
 
-<div style="background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); min-height:100vh;">
+<div class="progress" id="progress"></div>
 
-  <nav class="nav">
-    <span class="nav-brand">Черновик</span>
-    <a href="#board" aria-current="page">Статьи</a>
-    <a href="#tags">Теги</a>
-    <a href="#subscribe">Подписка</a>
-  </nav>
-
-  <a href="uploads/CTI_Daily_Report_2026-08-13.html" style="display:block; text-decoration:none; overflow:hidden; border-bottom:1px solid var(--color-divider); background:var(--color-neutral-100);">
-    <div class="ticker-track" style="display:flex; white-space:nowrap; animation:ticker-scroll 55s linear infinite; padding: var(--space-3) 0;">
-      <span style="display:flex; gap: var(--space-8); padding-right: var(--space-8);">
-        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;">CTI · 13.08.2026 — обновляется ежедневно</span>
-        <span style="color:var(--color-text); font-size:14px;">CVE-2026-68820 — Windows AFD.sys 0-day, активно эксплуатируется Lazarus (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">CVE-2026-55040 — SharePoint JWT Auth Bypass, эксплуатация в первые часы после PoC (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">ShieldBreak — 0-day обхода Microsoft Defender, патча нет (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">DeadLock ransomware перенёс C2 на блокчейн Polygon, 80+ жертв (High)</span>
-        <span style="color:var(--color-text); font-size:14px;">Sandworm / UAC-0145 — фейковые собеседования с троянским WireGuard (High)</span>
-        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700;">→ читать полный отчёт</span>
-      </span>
-      <span style="display:flex; gap: var(--space-8); padding-right: var(--space-8);">
-        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;">CTI · 13.08.2026 — обновляется ежедневно</span>
-        <span style="color:var(--color-text); font-size:14px;">CVE-2026-68820 — Windows AFD.sys 0-day, активно эксплуатируется Lazarus (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">CVE-2026-55040 — SharePoint JWT Auth Bypass, эксплуатация в первые часы после PoC (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">ShieldBreak — 0-day обхода Microsoft Defender, патча нет (Critical)</span>
-        <span style="color:var(--color-text); font-size:14px;">DeadLock ransomware перенёс C2 на блокчейн Polygon, 80+ жертв (High)</span>
-        <span style="color:var(--color-text); font-size:14px;">Sandworm / UAC-0145 — фейковые собеседования с троянским WireGuard (High)</span>
-        <span style="color:var(--color-accent-700); font-size:14px; font-weight:700;">→ читать полный отчёт</span>
-      </span>
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-audience" id="audience"></div>
+  <div class="wrap">
+    <div class="eyebrow">Риторика · Універсальні принципи</div>
+    <h1>Один слухач чи тисяча —<br><em>правила ті самі</em>.</h1>
+    <p class="hero-sub">
+      Мінливим є тільки масштаб. Ясність думки, структура, аргумент, історія, голос і контроль над страхом —
+      працюють однаково і в переговорах на двох, і на сцені перед залом. Це не набір лайфхаків,
+      а система з восьми принципів, зібрана з методик Мінто, Гандапаса, Рейнольдса, Дуарте, Галло,
+      Андерсона, Абітболя та Шахіджаняна.
+    </p>
+    <div class="hero-meta">
+      <span>8 принципів</span>
+      <span>Незалежно від розміру аудиторії</span>
+      <span>Мінто · Гандапас · Рейнольдс · Дуарте · Галло</span>
     </div>
-  </a>
+  </div>
+</header>
 
-  <main style="max-width:1080px; margin:0 auto; padding: 0 32px;">
-
-    <section style="padding: var(--space-10) 0 var(--space-8);">
-      <h1 style="font-family:var(--font-heading); font-weight:var(--font-heading-weight); font-size:clamp(38px,6vw,64px); line-height:1.05; margin:0; max-width:16ch;">Блог без одной темы</h1>
-      <p style="font-size:18px; line-height:1.65; color:var(--color-neutral-700); max-width:52ch; margin: var(--space-4) 0 0; text-align:justify;">Заметки обо всём, что зацепило: технологии, город, архитектура, случайные мысли в очереди. Без графика, без рубрик ради рубрик — только теги.</p>
-    </section>
-
-    <section id="board" style="padding: var(--space-6) 0 var(--space-4); border-top:1px solid var(--color-divider);">
-      <p style="font-family:var(--font-heading); font-size:15px; text-transform:uppercase; letter-spacing:0.04em; margin: 0 0 var(--space-6);">Последние статьи</p>
-
-      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap: var(--space-6);">
-
-        <article class="card">
-          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);"><span class="tag tag-outline">Общество</span></div>
-          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="vlast-golosa.html" style="text-decoration:none; color:inherit;">Власть голоса</a></h2>
-          <p class="card-body">Почему то, как мы говорим, решает больше, чем то, что мы говорим — и как это работает не только на сцене, но и в обычном разговоре.</p>
-          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
-            <span>6 мин</span>
-            <a href="vlast-golosa.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);"><span class="tag tag-outline">Архитектура</span></div>
-          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="architecture-elegance.html" style="text-decoration:none; color:inherit;">Архитектура элегантности</a></h2>
-          <p class="card-body">Что делает пространство красивым не по моде, а по сути — и почему элегантность почти всегда про то, что убрали, а не добавили.</p>
-          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
-            <span>7 мин</span>
-            <a href="architecture-elegance.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3);">
-            <span class="tag tag-outline">Безопасность</span>
-            <span class="tag tag-outline">Мессенджеры</span>
-          </div>
-          <h2 class="card-title" style="margin:0 0 var(--space-2);"><a href="messenger-security-privacy-guide.html" style="text-decoration:none; color:inherit;">Гид по безопасности и приватности в мессенджерах</a></h2>
-          <p class="card-body">Разбираем шифрование, метаданные и настройки приватности в популярных мессенджерах — что реально защищает переписку, а что просто выглядит защищённым.</p>
-          <div class="card-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-3);">
-            <span>9 мин</span>
-            <a href="messenger-security-privacy-guide.html" style="text-decoration:none; font-weight:600; color:var(--color-accent-700);">Читать →</a>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <section id="tags" style="padding: var(--space-8) 0 var(--space-10); border-top:1px solid var(--color-divider);">
-      <p style="font-family:var(--font-heading); font-size:15px; text-transform:uppercase; letter-spacing:0.04em; margin: 0 0 var(--space-6);">Теги</p>
-      <div style="display:flex; flex-wrap:wrap; gap: var(--space-3);">
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Технологии</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Архитектура</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Общество</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Безопасность</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Мессенджеры</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">CTI</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Книги</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Жизнь в Киеве</a>
-        <a href="#" class="tag tag-outline" style="text-decoration:none;">Разное</a>
-      </div>
-    </section>
-
-  </main>
-
-  <section id="subscribe" style="background:var(--color-neutral-900); color:var(--color-bg); padding: var(--space-8) 0;">
-    <div style="max-width:1080px; margin:0 auto; padding:0 32px; display:flex; align-items:center; justify-content:space-between; gap:var(--space-6); flex-wrap:wrap;">
+<!-- ================= 01 АУДИТОРІЯ ================= -->
+<section class="principle" id="p1">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">01</div>
       <div>
-        <h4 style="font-family:var(--font-heading); font-size:22px; margin:0 0 var(--space-2);">Новое — без расписания</h4>
-        <p style="margin:0; color:var(--color-neutral-300); font-size:14px;">Письмо приходит только тогда, когда есть, что сказать.</p>
+        <div class="p-eyebrow">До того як говорити</div>
+        <h2 class="p-title">Спершу — не тема, а слухач і мета</h2>
       </div>
-      <form style="display:flex; max-width:360px; width:100%; gap:var(--space-2);" onsubmit="event.preventDefault();">
-        <label for="email" style="position:absolute; left:-9999px;">Электронная почта</label>
-        <input id="email" type="email" placeholder="ваш@email.com" required class="input" style="flex:1;">
-        <button type="submit" class="btn btn-primary">Подписаться</button>
-      </form>
     </div>
-  </section>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Один слухач чи тисяча — перед будь-яким виступом варто відповісти на три групи запитань:
+        <strong>хто</strong> перед вами, <strong>навіщо</strong> ви говорите і <strong>якими засобами</strong>
+        досягнете результату. Гандапас саме так готував виступ для одного продукту перед двома різними
+        аудиторіями — рекламістами і телевізійниками. Продукт був той самий. Слова, приклади, аргументи
+        і навіть слайди — зовсім різні, бо різними були очікувані дії від кожної групи.</p>
 
-  <footer style="max-width:1080px; margin:0 auto; padding: var(--space-5) 32px var(--space-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: var(--space-3); font-size:13px; color:var(--color-neutral-700);">
-    <span>© 2026 Черновик</span>
-    <span style="display:flex; gap:var(--space-4);">
-      <a href="#tags" style="text-decoration:none; color:inherit;">Теги</a>
-      <a href="#" style="text-decoration:none; color:inherit;">RSS</a>
-    </span>
-  </footer>
+        <p>Помилка, яку роблять і на нараді для трьох людей, і на конференції для тисячі, — це
+        <strong>говорити про тему</strong> замість того, щоб говорити <strong>заради конкретної дії</strong>
+        слухача. Тема — «звіт за квартал». Мета — «переконати, що є привід для оптимізму».</p>
 
-</div>
+        <ul class="mini-list">
+          <li><strong>Хто вони</strong> — досвід, позиція, упередження, що вони вже знають і чого бояться.</li>
+          <li><strong>Навіщо їм слухати саме вас</strong> — яку їхню проблему це вирішує.</li>
+          <li><strong>Яку дію чи зміну думки</strong> ви очікуєте після останнього слова.</li>
+        </ul>
 
-</x-dc>
+        <div class="quote-block">
+          Ви завжди ведете слухача з пункту А в пункт Б. Пункт Б — це і є суть вашого повідомлення.
+          <span class="quote-source">Гарр Рейнольдс, «Обнажений оратор»</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 ГОЛОВНА ДУМКА ================= -->
+<section class="principle" id="p2">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">02</div>
+      <div>
+        <div class="p-eyebrow">Логіка викладу</div>
+        <h2 class="p-title">Одна головна думка на вершині піраміди</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Принцип піраміди Барбари Мінто працює однаково в діловому листі, у переговорах і на сцені:
+        людина спершу отримує <strong>головний висновок</strong>, а вже потім — аргументи, що його
+        підтримують. Не навпаки. Мозок слухача так чи інакше запам'ятовує «зверху вниз»: якщо не дати
+        головну думку одразу, він побудує її сам — і, швидше за все, невірно.</p>
+
+        <p>Перевірка проста: якщо слухач запам'ятає з вашого виступу лише одне речення — яким воно має
+        бути? Якщо ви не можете сформулювати відповідь одним реченням до підготовки слайдів чи тексту —
+        готуватися ще рано.</p>
+
+        <div class="two-col">
+          <div class="box bad">
+            <div class="box-title">Слабо</div>
+            <p>«Сьогодні я розповім про результати четвертого кварталу.»</p>
+          </div>
+          <div class="box good">
+            <div class="box-title">Сильно</div>
+            <p>«Продажі четвертого кварталу вперше за три роки перевищили план — і ось чому це привід діяти сміливіше.»</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 СТРУКТУРА ================= -->
+<section class="principle" id="p3">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">03</div>
+      <div>
+        <div class="p-eyebrow">Композиція</div>
+        <h2 class="p-title">Вступ 20% · розвиток 60% · фінал 20%</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Ця пропорція працює в музиці, у прозі і в публічному виступі, бо так влаштоване людське
+        сприйняття, а не тому, що її вигадали оратори. Кульмінація — найсильніший аргумент чи момент —
+        розташовується <strong>наприкінці другої частини</strong>, безпосередньо перед висновком, а не
+        десь у середині, де вона губиться.</p>
+
+        <p>Рейнольдс додає ще одне правило, яке рідко застосовують: працюючи над змістом, ви більше
+        <strong>віднімаєте, ніж додаєте</strong>. Більшість виступів провалюються не тому, що в них
+        замало матеріалу, а тому, що в них забагато всього — і головна думка тоне серед деталей.</p>
+
+        <ul class="mini-list">
+          <li><strong>Вступ</strong> — контекст і причина, чому це стосується саме цих слухачів.</li>
+          <li><strong>Розвиток</strong> — 2–3 змістовні блоки, кожен розкриває головну думку зі свого боку.</li>
+          <li><strong>Кульмінація</strong> — найсильніший доказ чи приклад, одразу перед фіналом.</li>
+          <li><strong>Фінал</strong> — висновок і конкретна дія, без нового матеріалу.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 АРГУМЕНТАЦІЯ ================= -->
+<section class="principle" id="p4">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">04</div>
+      <div>
+        <div class="p-eyebrow">Довіра</div>
+        <h2 class="p-title">Аргумент, що дійсно веде до висновку</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Перед публікою будь-якого розміру аргумент перевіряється однією схемою:
+        <strong>теза → причина → доказ → приклад → наслідок → дія</strong>. Якщо якась ланка відсутня,
+        слухач відчує розрив — навіть якщо не зможе пояснити словами, чому саме він не переконаний.</p>
+
+        <p>Варто заздалегідь перевірити три речі: чи справді висновок випливає з наведеної причини,
+        чи є прихована передумова, з якою слухач може не погодитися, і чи витримає теза очевидне
+        заперечення.</p>
+
+        <div class="two-col">
+          <div class="box bad">
+            <div class="box-title">Слабкі місця</div>
+            <p>Хибна дилема, підміна тези, апеляція до авторитету замість доказу, надто широкий висновок з вузького прикладу.</p>
+          </div>
+          <div class="box good">
+            <div class="box-title">Що рятує</div>
+            <p>Назвати контраргумент самому, перш ніж це зробить слухач, і показати, чому теза все одно витримує.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 ІСТОРІЯ ================= -->
+<section class="principle" id="p5">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">05</div>
+      <div>
+        <div class="p-eyebrow">Пам'ять</div>
+        <h2 class="p-title">Факти переконують, історія — запам'ятовується</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Дослідники мозку називають це «емоційно забарвленою подією»: коли слухач відчуває емоцію —
+        здивування, тривогу, полегшення — мигдалеподібне тіло виділяє дофамін, і саме ця інформація
+        закріплюється в пам'яті найкраще. Сухі дані самі по собі так не працюють, хоч би якими
+        переконливими вони були.</p>
+
+        <p>Структура, що працює в будь-якому масштабі — від історії для трьох колег до кейсу перед залом:
+        <strong>контекст → проблема → дія → результат → висновок</strong>. Історія повинна прямо
+        підтримувати головну думку, а не розважати заради розваги — інакше вона забирає увагу, а не
+        підсилює її.</p>
+
+        <div class="quote-block">
+          Люди забудуть сказане вами, забудуть зроблене вами, але ніколи не забудуть те, що ви змусили їх відчути.
+          <span class="quote-source">Майя Енджелоу, наведено у Кармін Галло, «Презентації у стилі TED»</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 ГОЛОС ================= -->
+<section class="principle" id="p6">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">06</div>
+      <div>
+        <div class="p-eyebrow">Подача</div>
+        <h2 class="p-title">Голос і тіло говорять раніше за слова</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Слухач інтерпретує повідомлення через три канали одночасно: слова, голос і мову тіла. Якщо
+        канали суперечать одне одному — довіра падає, навіть коли текст ідеальний. Це діє однаково
+        і в розмові тет-а-тет, і на великій сцені: тільки масштаб жестів і гучність голосу змінюються,
+        сама механіка — ні.</p>
+
+        <ul class="mini-list">
+          <li><strong>Дихання</strong> — основа гучності й стабільності голосу, а не темп мовлення сам по собі.</li>
+          <li><strong>Паузи</strong> — розставляються там, де слухачу потрібен час усвідомити сказане.</li>
+          <li><strong>Контакт очима</strong> — і зі співрозмовником, і із залом: людина повинна бачити вас, щоб зчитувати немовні сигнали.</li>
+          <li><strong>Артикуляція</strong> — важливіша за гучність: краще говорити тихіше, але чіткіше.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 СТРАХ ================= -->
+<section class="principle" id="p7">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">07</div>
+      <div>
+        <div class="p-eyebrow">Психологія</div>
+        <h2 class="p-title">Хвилювання не усувають — його переосмислюють</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Реакція «бий або біжи» вмикається однаково перед одним співрозмовником і перед залом на тисячу
+        людей — різниця лише в силі. Придушувати цю емоцію — гірший варіант, ніж її назвати: коли людина
+        подумки формулює «це звичайна реакція на стрес, вона мине», рівень тривоги вимірювано знижується.</p>
+
+        <p>Найнадійніший спосіб зменшити хвилювання — не дихальні техніки самі по собі, а
+        <strong>ступінь підготовки</strong>. Що краще ви знаєте матеріал і логіку свого виступу, то
+        менше причин для страху: ми боїмося саме невідомого, а не сцени як такої.</p>
+
+        <div class="quote-block">
+          Гарна підготовка значно знижує тривожність. Чим краще ви знаєте матеріал, тим менше нервуєте.
+          <span class="quote-source">Гарр Рейнольдс, «Обнажений оратор»</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 08 РЕПЕТИЦІЯ ================= -->
+<section class="principle" id="p8">
+  <div class="wrap">
+    <div class="p-head">
+      <div class="p-num">08</div>
+      <div>
+        <div class="p-eyebrow">Фінальний крок</div>
+        <h2 class="p-title">Промовляйте, а не пишіть</h2>
+      </div>
+    </div>
+    <div class="p-body">
+      <div></div>
+      <div class="p-content">
+        <p>Усна і письмова мова обробляються різними ділянками мозку — тому виступ, підготовлений
+        написанням тексту, завжди звучить «завчено», навіть якщо його вивчили напам'ять. Замість
+        конспекту Гандапас пропонує одразу <strong>промовляти</strong> майбутній виступ вголос,
+        кілька разів поспіль, щоразу трохи інакше, і лише потім, коли текст природно вирівняється,
+        зафіксувати тези — не більше семи пунктів.</p>
+
+        <ul class="mini-list">
+          <li>Промовте виступ вголос кілька разів, не зупиняючись на помилках.</li>
+          <li>Поступово додайте жести й міміку — коли слова вже вільно ллються.</li>
+          <li>Заміряйте час і підженіть під регламент лише на цьому етапі.</li>
+          <li>Зафіксуйте максимум сім тез — це все, що потрібно як опора.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= МАСШТАБУВАННЯ ================= -->
+<section class="scale-section">
+  <div class="wrap">
+    <div class="scale-head">
+      <div class="p-eyebrow">Що змінюється, а що ні</div>
+      <h2>Масштаб аудиторії змінює форму, не суть</h2>
+      <p>Вісім принципів вище працюють завжди. Змінюється лише те, як саме ви їх реалізуєте технічно —
+      залежно від того, скільки людей вас чують.</p>
+    </div>
+
+    <div class="scale-grid">
+      <div class="scale-col head">
+        <div class="n">Розмір</div>
+        <div class="t">Параметр</div>
+      </div>
+      <div class="scale-col head">
+        <div class="n">1–3 людини</div>
+        <div class="t">Розмова / переговори</div>
+      </div>
+      <div class="scale-col head">
+        <div class="n">5–30 людей</div>
+        <div class="t">Нарада / зустріч</div>
+      </div>
+      <div class="scale-col head">
+        <div class="n">50+ людей</div>
+        <div class="t">Конференція / сцена</div>
+      </div>
+
+      <div class="scale-col">
+        <div class="t">Голос і темп</div>
+        <ul><li>Природна гучність</li><li>Паузи короткі</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Розмовна гучність</li><li>Пауза = час подумати</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Трохи гучніше і повільніше</li><li>Пауза утримує увагу групи</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Проєкція голосу, чіткіша дикція</li><li>Довші паузи для ефекту</li></ul>
+      </div>
+
+      <div class="scale-col">
+        <div class="t">Контакт з очима</div>
+        <ul><li>Постійний</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>По черзі з кожним</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Секторами по залу</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Ряди і зони, не окремі обличчя</li></ul>
+      </div>
+
+      <div class="scale-col">
+        <div class="t">Взаємодія</div>
+        <ul><li>Діалог, питання одразу</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Питання по ходу</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Питання блоками</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Питання в кінці / модератор</li></ul>
+      </div>
+
+      <div class="scale-col">
+        <div class="t">Візуальні засоби</div>
+        <ul><li>Часто не потрібні</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Один аркуш / екран</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Слайди — опора, не текст</li></ul>
+      </div>
+      <div class="scale-col">
+        <ul><li>Великий шрифт, мінімум тексту на слайд</li></ul>
+      </div>
+    </div>
+
+    <div class="constant-strip">
+      <strong>Незмінно:</strong>
+      одна головна думка, структура «вступ–розвиток–фінал», аргумент без маніпуляцій, історія, що підсилює тезу.
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЧЕКЛИСТ ================= -->
+<section class="checklist-section">
+  <div class="wrap">
+    <div class="checklist-head">
+      <div class="p-eyebrow">Перед виходом</div>
+      <h2>Швидка перевірка за дві хвилини</h2>
+    </div>
+
+    <div class="check-grid">
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Головна думка</strong>Чи можу я сформулювати її одним реченням?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Слухач</strong>Чи знаю, яку дію очікую від нього після виступу?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Структура</strong>Чи є чіткий вступ, розвиток і фінал без нового матеріалу в кінці?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Кульмінація</strong>Чи стоїть найсильніший аргумент прямо перед фіналом?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Історія</strong>Чи підтримує вона головну думку, а не просто розважає?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Контраргумент</strong>Чи назвав я найочевидніше заперечення сам?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Репетиція</strong>Чи промовляв я це вголос, а не лише прочитав про себе?</p>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <p><strong>Хвилювання</strong>Чи назвав я собі цю емоцію, замість того щоб її придушувати?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="closing">
+  <div class="wrap">
+    <div class="closing-mark"></div>
+    <h2>Аудиторія збільшується і зменшується.<br>Принципи, на яких тримається довіра, — ні.</h2>
+    <p>RHETORIC · UNIVERSAL PRINCIPLES</p>
+  </div>
+</section>
+
+<script>
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + '%';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+      }
+    });
+  }, {threshold:0.12});
+  document.querySelectorAll('.principle').forEach(el => observer.observe(el));
+
+  const audience = document.getElementById('audience');
+  if(audience){
+    const W = audience.clientWidth || 720;
+    const H = 340;
+    const count = 90;
+    for(let i=0;i<count;i++){
+      const d = document.createElement('div');
+      d.className = 'dot';
+      const angle = Math.random()*Math.PI*2;
+      const radius = Math.pow(Math.random(),0.55) * (Math.min(W,H*2)/2 - 10);
+      const x = W/2 + Math.cos(angle)*radius;
+      const y = H/2 + Math.sin(angle)*radius*0.5;
+      const size = 3 + Math.random()*5;
+      d.style.width = size+'px';
+      d.style.height = size+'px';
+      d.style.left = x+'px';
+      d.style.top = y+'px';
+      d.style.animationDelay = (Math.random()*4.5)+'s';
+      audience.appendChild(d);
+    }
+    const center = document.createElement('div');
+    center.className = 'dot center';
+    center.style.width='10px';
+    center.style.height='10px';
+    center.style.left = (W/2-5)+'px';
+    center.style.top = (H/2-5)+'px';
+    audience.appendChild(center);
+  }
+</script>
+
 </body>
 </html>
