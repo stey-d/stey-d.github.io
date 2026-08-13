@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>CTI Daily Report — 13 August 2026</title>
+<style>
+  :root{
+    --bg:#0b1220; --card:#101a2e; --card2:#0d1626; --text:#dbe4f3; --muted:#8ea0c2;
+    --crit:#e0455f; --high:#e8933a; --med:#e2c53c; --low:#4fb87a; --accent:#4f8cff;
+    --border:#1f2c46;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:linear-gradient(180deg,#070c17,#0b1220 300px);
+    color:var(--text); font-family:'Segoe UI',Arial,sans-serif; margin:0; padding:0 0 60px 0; line-height:1.55;
+  }
+  header{
+    padding:36px 6vw 24px 6vw; border-bottom:1px solid var(--border);
+    background:radial-gradient(circle at 20% 0%, #16213f, #0b1220 70%);
+  }
+  header h1{margin:0 0 6px 0; font-size:28px; color:#fff;}
+  header .sub{color:var(--muted); font-size:14px;}
+  .container{padding:0 6vw;}
+  h2{
+    margin-top:46px; font-size:21px; color:#fff; border-left:4px solid var(--accent);
+    padding-left:12px;
+  }
+  h3{font-size:17px; color:#cfe0ff; margin-top:26px;}
+  h4{font-size:14.5px; color:#aebee0; margin:18px 0 6px 0;}
+  p{color:var(--text);}
+  .muted{color:var(--muted);}
+  a{color:#7db2ff; text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:18px 22px; margin:16px 0;
+  }
+  .grid5{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:18px 0;}
+  .stat{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center;}
+  .stat .num{font-size:26px; font-weight:700; color:#fff;}
+  .stat .lbl{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:4px;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 24px 0; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:9px 10px; text-align:left; vertical-align:top;}
+  th{background:#152140; color:#cfe0ff; font-weight:600; white-space:nowrap;}
+  tr:nth-child(even) td{background:#0d1728;}
+  .badge{display:inline-block; padding:2px 9px; border-radius:12px; font-size:11.5px; font-weight:700; color:#08101f;}
+  .badge.crit{background:var(--crit); color:#fff;}
+  .badge.high{background:var(--high); color:#221200;}
+  .badge.med{background:var(--med); color:#221b00;}
+  .badge.low{background:var(--low); color:#052014;}
+  .badge.prelim{background:#3a4a6d; color:#dce6ff;}
+  .toc{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:16px 22px; margin:20px 0;}
+  .toc a{display:block; padding:3px 0; font-size:14px;}
+  .src-link{font-size:12.5px; color:var(--muted);}
+  .event{border-left:3px solid var(--accent); padding-left:16px; margin:20px 0;}
+  .event.crit{border-color:var(--crit);}
+  .event.high{border-color:var(--high);}
+  .event.med{border-color:var(--med);}
+  .event h4{margin-top:0;}
+  code{background:#0a1224; padding:1px 6px; border-radius:4px; font-size:12.5px; color:#9fd6ff;}
+  footer{margin-top:60px; padding:24px 6vw; border-top:1px solid var(--border); color:var(--muted); font-size:12.5px;}
+  ol,ul{padding-left:22px;}
+  .note{font-size:12.5px; color:var(--muted); font-style:italic;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🛡️ Ежедневный аналитический отчет Cyber Threat Intelligence</h1>
+  <div class="sub">Отчетный период: 12–13 августа 2026 · Подготовлено: автоматизированная задача «news-_daily-cyber» · Аудитория: SOC / Blue Team / Vulnerability Management</div>
+</header>
+
+<div class="container">
+
+<h2 id="exec">Executive Summary</h2>
+<div class="card">
+<p>Отчетный период характеризуется <b>критическим уровнем риска</b>: подтверждена активная эксплуатация нового Windows kernel zero-day (CVE-2026-68820) северокорейской группировкой Lazarus в кампании Operation Dream Job, а также массовая эксплуатация свежераскрытого PoC для обхода аутентификации SharePoint (CVE-2026-55040) в течение суток после публикации. Дополнительно независимый исследователь «Nightmare Eclipse» опубликовал PoC нового 0-day «ShieldBreak», обходящего Microsoft Defender и дающего SYSTEM-доступ на полностью пропатченных системах — патча пока не существует. Группировка Sandworm (UAC-0145/APT44) развернула кампанию против украинских системных администраторов через фальшивые предложения о работе и троянизированный WireGuard-клиент. Программа-вымогатель DeadLock впервые перенесла C2-инфраструктуру в блокчейн Polygon, что делает её устойчивой к традиционным методам пресечения правоохранительными органами.</p>
+
+<div class="grid5">
+  <div class="stat"><div class="num">421</div><div class="lbl">CVE закрыто Microsoft (Aug PT)</div></div>
+  <div class="stat"><div class="num">3</div><div class="lbl">0-day в Patch Tuesday</div></div>
+  <div class="stat"><div class="num">62</div><div class="lbl">Critical CVE (MSFT)</div></div>
+  <div class="stat"><div class="num">1</div><div class="lbl">Активно эксплуатируемый 0-day без патча (ShieldBreak)</div></div>
+  <div class="stat"><div class="num">80+</div><div class="lbl">Жертв DeadLock ransomware (leak site)</div></div>
+</div>
+
+<h3>Топ-5 наиболее критичных событий дня</h3>
+<ol>
+<li><b>CVE-2026-68820</b> (Windows AFD.sys, kernel EoP) — активно эксплуатируется APT Lazarus для атак на оборонный/аэрокосмический сектор (Франция, Германия, Бразилия, Индия); патч выпущен 11.08.2026, включен в CISA KEV. <span class="badge crit">Critical</span></li>
+<li><b>CVE-2026-55040</b> (SharePoint JWT Auth Bypass) — эксплуатация в первые часы после публикации PoC от Rapid7 (11.08.2026), honeypot-фиксации атак с 12.08.2026; может быть сцеплена с CVE-2026-63520 для RCE. <span class="badge crit">Critical</span></li>
+<li><b>ShieldBreak</b> — неофициальный 0-day PoC от «Nightmare Eclipse», обходит Microsoft Defender (bypass для RoguePlanet), дает SYSTEM на Windows 10/11/Server 2025; патча нет. <span class="badge crit">Critical</span></li>
+<li><b>DeadLock Ransomware</b> — перенос C2/leak-инфраструктуры на блокчейн Polygon + Session + Wasabi, затруднение takedown; 80+ жертв, преимущественно в Европе. <span class="badge high">High</span></li>
+<li><b>Sandworm / UAC-0145</b> — кампания фейковых собеседований с троянизированным WireGuard-клиентом «SopraVPN» против системных администраторов Украины; связь с ГРУ РФ (APT44/Seashell Blizzard). <span class="badge high">High</span></li>
+</ol>
+
+<h3>Наиболее активно эксплуатируемые CVE</h3>
+<p>CVE-2026-68820 (Windows AFD.sys, exploited in the wild, CISA KEV), CVE-2026-55040 (SharePoint auth bypass, exploited within hours of PoC release), CVE-2026-63520 (SharePoint, chainable RCE).</p>
+
+<h3>Главные кампании злоумышленников</h3>
+<p>Lazarus / Operation Dream Job (Windows 0-day + FudModule rootkit + Troy backdoor); Sandworm / UAC-0145 (fake recruiter → trojanized WireGuard); DeadLock ransomware (blockchain-backed C2); Nightmare Eclipse vs Microsoft Defender (независимый исследователь, серия 0-day начиная с апреля 2026).</p>
+
+<h3>Рекомендации</h3>
+<table>
+<tr><th style="width:16%">Аудитория</th><th>Рекомендации</th></tr>
+<tr><td><b>SOC</b></td><td>Приоритизировать детект эксплойтов CVE-2026-68820/CVE-2026-55040; добавить в мониторинг индикаторы FudModule (отключение 94 ETW-провайдеров), процессы cfapi/CLFS-манипуляций (ShieldBreak); усилить контроль подозрительных JWT-токенов SharePoint.</td></tr>
+<tr><td><b>Blue Team</b></td><td>Проверить журналы на предмет попыток эксплуатации SharePoint JWT bypass с 11–12.08.2026; провести threat hunting по признакам компрометации через фейковые вакансии (LinkedIn/Telegram/Zoom), заблокировать известные C2-паттерны Polygon-based ransomware.</td></tr>
+<tr><td><b>Vulnerability Management</b></td><td>Немедленно применить August 2026 Patch Tuesday (особенно KB для AFD.sys); отслеживать статус ShieldBreak (нет официального патча — рассмотреть compensating controls); патчить SharePoint Server on-prem в первую очередь.</td></tr>
+<tr><td><b>Администраторы Windows</b></td><td>Установить патчи от 11.08.2026 в течение 24–48 часов; включить Smart App Control где возможно; проверить целостность ETW-телеметрии на серверах оборонного/аэрокосмического профиля.</td></tr>
+<tr><td><b>Администраторы Cisco</b></td><td>Новых advisories в отчетном окне не зафиксировано; убедиться, что критические патчи от 05.08.2026 (Catalyst SD-WAN CVSS 9.9, IOS XE CVSS 9.8) применены.</td></tr>
+<tr><td><b>Администраторы WordPress</b></td><td>Проверить использование плагинов BdThemes (7 затронутых плагинов временно сняты с публикации), обновить Ajax Search Lite до 4.14.5, обновить Sucuri Security plugin; учитывать, что эксплуатация начинается в течение часов после раскрытия.</td></tr>
+</table>
+
+<h3>Общий рейтинг риска: <span class="badge crit">CRITICAL</span></h3>
+</div>
+
+<div class="toc">
+<b>Содержание</b>
+<a href="#windows">Windows</a>
+<a href="#wordpress">WordPress</a>
+<a href="#joomla">Joomla</a>
+<a href="#cisco">Cisco</a>
+<a href="#apple">Apple</a>
+<a href="#telegram">Telegram</a>
+<a href="#viber">Viber</a>
+<a href="#whatsapp">WhatsApp</a>
+<a href="#signal">Signal</a>
+<a href="#newvulns">Новые уязвимости</a>
+<a href="#attacks">Кибератаки</a>
+<a href="#ioc">IOC</a>
+<a href="#breaches">Утечки данных и киберинциденты</a>
+<a href="#sources">Источники</a>
+</div>
+
+<!-- WINDOWS -->
+<h2 id="windows">Windows</h2>
+
+<div class="event crit">
+<h4>Microsoft August 2026 Patch Tuesday — 421 CVE закрыто, включая 3 zero-day</h4>
+<p><b>Дата публикации:</b> 11.08.2026 · <b>Источник:</b> Microsoft MSRC / BleepingComputer / cybersecuritynews.com / Rapid7 / Qualys / Tenable / Talos</p>
+<p><b>Краткое описание:</b> Microsoft выпустила плановое августовское обновление безопасности, закрывающее 421 уязвимость (по разным подсчетам источников 394–421), из которых 62 отмечены как Critical и 357 как Important. Устранены 3 zero-day уязвимости: одна активно эксплуатируемая (CVE-2026-68820) и две публично раскрытые до патча.</p>
+<p><b>Технические детали:</b> Распределение по типам эксплуатации: elevation of privilege — 174 патча (42%), remote code execution — 109 патчей (26%), information disclosure — 85 (20%). Затронуты компоненты: Windows HTTP.sys, Windows Hyper-V, Windows NTFS, Desktop Window Manager, Dynamics Business Central, GitHub Copilot/VS Code, Microsoft Exchange Server и другие.</p>
+<p><b>Затронутые версии:</b> Windows 10, Windows 11 (включая 25H2), Windows Server (включая Server 2025), Exchange Server.</p>
+<p><b>PoC:</b> Да, для ряда CVE (включая связанные SharePoint-флоу) · <b>Эксплойт:</b> Да · <b>Активная эксплуатация:</b> Да (CVE-2026-68820)</p>
+<p><b>Ссылка:</b> <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-august-2026-patch-tuesday-fixes-400-flaws-3-zero-days/" target="_blank">BleepingComputer</a> · <a href="https://www.tenable.com/blog/microsofts-august-2026-patch-tuesday-addresses-398-cves-cve-2026-68820" target="_blank">Tenable</a> · <a href="https://blog.talosintelligence.com/microsoft-patch-tuesday-for-august-2026/" target="_blank">Cisco Talos</a></p>
+</div>
+
+<div class="event crit">
+<h4>CVE-2026-68820 — Windows AFD.sys (WinSock) 0-day, эксплуатируется Lazarus (Operation Dream Job)</h4>
+<p><b>Дата публикации:</b> присвоен CVE 05.08.2026, патч 11.08.2026, раскрытие кампании — 12.08.2026 · <b>Источник:</b> The Hacker News, BleepingComputer, SecurityWeek, SOC Prime, Forbes</p>
+<p><b>Краткое описание:</b> Use-after-free race condition в afd.sys — драйвере ядра, управляющем сокетными операциями WinSock практически для всех приложений Windows. Северокорейская группировка Lazarus эксплуатировала уязвимость минимум 5 недель до выхода патча (артефакт rootkit датирован 07.07.2026) в рамках кампании Operation Dream Job — фишинг через поддельные вакансии на LinkedIn с вредоносным PDF/трояном-«PDF-viewer», устанавливающим бэкдор Troy.</p>
+<p><b>Технические детали:</b> Победа в состоянии гонки над потоками, обращающимися к состоянию сокета без должной синхронизации, дает атакующему kernel read/write примитив и полные привилегии SYSTEM. После эксплуатации разворачивается rootkit FudModule v3.1, отключающий 94 канала мониторинга безопасности (ETW-провайдеры), удаляющий minifilters, останавливающий NT Kernel Logger, обходящий Smart App Control. Таргетируются Windows 11 сборки 26100 и 26200.</p>
+<p><b>Затронутые версии:</b> Windows 10, Windows 11 (в т.ч. 25H2), Windows Server 2025.</p>
+<p><b>PoC:</b> Публично не опубликован (эксплойт использовался в закрытой кампании) · <b>Эксплойт:</b> Да, in-the-wild · <b>Активная эксплуатация:</b> Да, подтверждена</p>
+<p><b>MITRE ATT&CK:</b> T1190 (Exploit Public-Facing Application — вектор через фишинг), T1068 (Exploitation for Privilege Escalation), T1014 (Rootkit), T1562.001 (Impair Defenses: Disable/Modify Tools), T1204.002 (Malicious File)</p>
+<p><b>CVSS:</b> High/Critical (точный балл варьируется по источникам, EoP до SYSTEM) · <b>CWE:</b> CWE-416 (Use After Free)</p>
+<p><b>Официальная рекомендация:</b> Патч включен в August 2026 Patch Tuesday; добавлено в CISA KEV с требованием патчинга федеральных агентств США в течение 2 недель.</p>
+<p><b>Ссылка:</b> <a href="https://thehackernews.com/2026/08/lazarus-exploits-windows-zero-day-to.html" target="_blank">The Hacker News</a> · <a href="https://www.bleepingcomputer.com/news/security/lazarus-hackers-exploited-windows-zero-day-to-target-defense-firms/" target="_blank">BleepingComputer</a> · <a href="https://www.securityweek.com/fresh-windows-zero-day-exploited-in-north-korean-cyberattacks/" target="_blank">SecurityWeek</a></p>
+</div>
+
+<div class="event crit">
+<h4>ShieldBreak — неофициальный Microsoft Defender 0-day (обход патча, SYSTEM-доступ), патча не существует</h4>
+<p><b>Дата публикации:</b> 12.08.2026 · <b>Источник:</b> BleepingComputer, The Hacker News, TechCrunch, The Register, cybersecuritynews.com</p>
+<p><b>Краткое описание:</b> Независимый исследователь под псевдонимом «Nightmare Eclipse» опубликовал PoC нового эксплойта «ShieldBreak» вскоре после выхода августовских патчей Microsoft — на фоне открытого конфликта с Microsoft (компания ранее угрожала юридическими действиями исследователю). ShieldBreak — обход исправления для ранее раскрытой уязвимости RoguePlanet (июнь 2026).</p>
+<p><b>Технические детали:</b> Эксплойт использует user-mode callback hook для изменения содержимого файлов во время cloud-hydration сканирования Defender через Cloud Filter API (cfapi), в комбинации с манипуляцией CLFS-логами и символическими ссылками для получения доступа уровня SYSTEM. Для срабатывания требуется включенный Microsoft Defender.</p>
+<p><b>Затронутые версии:</b> Windows 10, Windows 11 (включая последнюю 25H2), Windows Server 2025 — <i>подтверждено работающим на полностью пропатченных системах</i>.</p>
+<p><b>PoC:</b> Да, опубликован публично · <b>Эксплойт:</b> Да · <b>Активная эксплуатация:</b> Не подтверждена официально (Предварительная информация — эксплуатация в реальных атаках пока не зафиксирована, но PoC общедоступен)</p>
+<p><b>MITRE ATT&CK:</b> T1068 (Exploitation for Privilege Escalation), T1562.001 (Impair Defenses)</p>
+<p><b>Официальная рекомендация:</b> Патча от Microsoft на момент публикации отчета нет; является частью серии из 8+ эксплойтов (LegacyHive, RoguePlanet, BlueHammer, RedSun, YellowKey, GreenPlasma, MiniPlasma, UnDefend), выпущенных этим же исследователем с апреля 2026.</p>
+<p><b>Ссылка:</b> <a href="https://www.bleepingcomputer.com/news/security/new-microsoft-defender-shieldbreak-zero-day-grants-system-privileges/" target="_blank">BleepingComputer</a> · <a href="https://thehackernews.com/2026/08/shieldbreak-zero-day-poc-claims.html" target="_blank">The Hacker News</a> · <a href="https://www.theregister.com/cyber-crime/2026/08/12/microsoft-vendetta-hacker-has-a-new-zero-day-that-gives-system-privileges-on-fully-patched-windows/5286889" target="_blank">The Register</a></p>
+</div>
+
+<div class="event crit">
+<h4>CVE-2026-55040 / CVE-2026-63520 — Microsoft SharePoint JWT Auth Bypass → RCE chain</h4>
+<p><b>Дата публикации:</b> раскрытие PoC 11.08.2026, фиксация эксплуатации 12.08.2026 · <b>Источник:</b> Rapid7, The Hacker News, SecurityWeek, BleepingComputer, Cyber Kendra</p>
+<p><b>Краткое описание:</b> Rapid7 раскрыл технические детали CVE-2026-55040 — обхода аутентификации в конвейере валидации JWT-токенов SharePoint, позволяющего неаутентифицированному удаленному атакующему выполнять операции от имени пользователя сайта или администратора. Опубликован Python PoC. Honeypot-сеть Defused зафиксировала попытки эксплуатации с использованием этого PoC уже 12.08.2026. Связанная уязвимость CVE-2026-63520 может быть сцеплена с CVE-2026-55040 для достижения неаутентифицированного RCE.</p>
+<p><b>Технические детали:</b> PoC подделывает JWT-токен, запрашивает контроллер домена цели, перечисляет пользователей по SID и автоматически находит SID администратора сайта.</p>
+<p><b>Затронутые версии:</b> Microsoft SharePoint Server (on-premises).</p>
+<p><b>PoC:</b> Да (Rapid7, публичный) · <b>Эксплойт:</b> Да, активно используется · <b>Активная эксплуатация:</b> Да, подтверждена (honeypot-телеметрия Defused)</p>
+<p><b>MITRE ATT&CK:</b> T1190 (Exploit Public-Facing Application), T1078 (Valid Accounts — через подделку токена)</p>
+<p><b>Официальная рекомендация:</b> Патч выпущен Microsoft 11.08.2026 в рамках Patch Tuesday; настоятельно рекомендуется немедленное обновление SharePoint on-prem серверов.</p>
+<p><b>Ссылка:</b> <a href="https://thehackernews.com/2026/08/attackers-exploit-sharepoint.html" target="_blank">The Hacker News</a> · <a href="https://www.securityweek.com/sharepoint-vulnerability-exploited-shortly-after-poc-release/" target="_blank">SecurityWeek</a> · <a href="https://www.rapid7.com/blog/post/ve-cve-2026-55040-microsoft-sharepoint-jwt-token-authentication-bypass-fixed/" target="_blank">Rapid7</a></p>
+</div>
+
+<!-- WORDPRESS -->
+<h2 id="wordpress">WordPress</h2>
+
+<div class="event crit">
+<h4>BdThemes Supply Chain Attack — отравление JSON-фида, создание rogue-администраторов в 7 плагинах</h4>
+<p><b>Дата публикации:</b> 07–08.08.2026 (продолжает освещаться в отчетном окне) · <b>Источник:</b> The Hacker News, GBHackers</p>
+<p><b>Краткое описание:</b> Скомпрометированный JSON-фид BdThemes использован для эксплуатации XSS в семи плагинах WordPress, создания скрытых административных учетных записей и установки PHP web shell без необходимости обновления самих плагинов. Все семь затронутых плагинов временно сняты с публикации в каталоге WordPress.org «на полную проверку».</p>
+<p><b>Технические детали:</b> Атака через сторонний JSON-канал обновлений/контента, используемый темами и плагинами BdThemes; инъекция вредоносного JS приводит к XSS, эскалации до создания администратора и загрузке веб-шелла.</p>
+<p><b>Затронутые версии:</b> 7 плагинов экосистемы BdThemes (точный список — в каталоге WordPress.org, статус: closed pending review).</p>
+<p><b>PoC:</b> Не опубликован публично · <b>Эксплойт:</b> Да, in-the-wild · <b>Активная эксплуатация:</b> Да</p>
+<p><b>CWE:</b> CWE-79 (Cross-Site Scripting), CWE-94 (Code Injection)</p>
+<p><b>Ссылка:</b> <a href="https://thehackernews.com/2026/08/bdthemes-supply-chain-attack-poisons.html" target="_blank">The Hacker News</a></p>
+</div>
+
+<div class="event high">
+<h4>CVE-2026-28139 — Ajax Search Lite: unauthenticated PHP Object Injection</h4>
+<p><b>Дата публикации:</b> 04.08.2026, патч в версии 4.14.5 · <b>Источник:</b> Patchstack, webmastered.com</p>
+<p><b>Краткое описание:</b> Критическая уязвимость PHP Object Injection без аутентификации в популярном плагине Ajax Search Lite.</p>
+<p><b>Затронутые версии:</b> до 4.14.4 включительно; исправлено в 4.14.5.</p>
+<p><b>CVSS:</b> 9.8 (Critical, Patchstack) · <b>PoC:</b> Не подтвержден публично · <b>Активная эксплуатация:</b> Не подтверждена</p>
+<p><b>Mitigation:</b> Обновить до версии 4.14.5 или новее.</p>
+</div>
+
+<div class="event med">
+<h4>CVE-2026-73033 — Sucuri Security plugin</h4>
+<p><b>Дата публикации:</b> 10.08.2026 · <b>Источник:</b> Freshy Sites security bulletin</p>
+<p><b>Краткое описание:</b> Уязвимость в плагине Sucuri Security для WordPress.</p>
+<p><b>Затронутые версии:</b> до 2.7.3 включительно.</p>
+<p><b>CVSS:</b> 6.5 (Medium, CVSS v3.1) · <b>Активная эксплуатация:</b> Не подтверждена</p>
+<p><b>Ссылка:</b> <a href="https://freshysites.com/security-bulletins/sucuri-security-wordpress-plugin-vulnerability-cve-2026-73033/" target="_blank">Freshy Sites</a></p>
+</div>
+
+<p class="note">Контекст отрасли: по данным webmastered.com, в 2026 году фиксируется 250+ еженедельных раскрытий уязвимостей WordPress-плагинов, 43% из них эксплуатируемы без аутентификации, а эксплойты начинают появляться в течение часов после публичного раскрытия.</p>
+
+<!-- JOOMLA -->
+<h2 id="joomla">Joomla</h2>
+<div class="card">
+<p class="note">В строгом 24-часовом отчетном окне (12–13.08.2026) новых Joomla-специфичных публикаций из указанных источников не обнаружено. Актуальный фон (для контекста, не входит в 24ч окно): CVE-2026-48907 (JCE extension, unauthenticated RCE, CVSS 10.0, в CISA KEV), CVE-2026-48908 и CVE-2026-56290 (SP Page Builder / Page Builder CK, CVSS 10.0, KEV), CVE-2026-48904 (privilege escalation, com_users), CVE-2026-56292 (SQL injection, AcyMailing). Рекомендуется администраторам Joomla, использующим JCE и Page Builder-расширения, убедиться в применении патчей, выпущенных в июне–июле 2026.</p>
+</div>
+
+<!-- CISCO -->
+<h2 id="cisco">Cisco</h2>
+<div class="card">
+<p class="note">Новых Cisco PSIRT advisories в отчетном окне (12–13.08.2026) не зафиксировано. Последний крупный пакет — Cisco Advance Notification от 05.08.2026: критические уязвимости в Cisco Catalyst SD-WAN Software (CVSS 9.9) и IOS XE Software (CVSS 9.8), а также advisories по ClamAV (DoS в компонентах сканирования, затрагивает продукты Cisco, использующие ClamAV) и hardening-релизы для IOS XE и Catalyst SD-WAN IMC/RoomOS/Terminal Services Agent (уязвимости, найденные внутренним тестированием, не эксплуатируются активно). Администраторам рекомендуется убедиться, что патчи от 05.08.2026 применены.</p>
+<p><b>Ссылки:</b> <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-L4XfJg8S" target="_blank">Cisco Advance Notification 05.08.2026</a> · <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-clamav-WuuvVd26" target="_blank">ClamAV Advisory</a> · <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-hardening-iosxe-V8NMuMZJ" target="_blank">IOS XE Hardening</a></p>
+</div>
+
+<!-- APPLE -->
+<h2 id="apple">Apple</h2>
+<div class="event med">
+<h4>CVE-2026-65400 — Screen Sharing authentication bypass (macOS)</h4>
+<p><b>Дата публикации:</b> опубликовано «в четверг» (точная дата августа 2026 не уточнена источниками — помечено как предварительное) · <b>Источник:</b> SecurityWeek / Inc. / отраслевые обзоры</p>
+<p><b>Краткое описание:</b> Apple выпустила обновления macOS Tahoe 26.6.1, macOS Sequoia 15.7.9 и macOS Sonoma 14.8.9, закрывающие единственную уязвимость, позволяющую сетевому атакующему аутентифицироваться в Screen Sharing без действительных учетных данных.</p>
+<p><b>Технические детали:</b> Уязвимость затрагивает пользователей, которые вручную включили Screen Sharing до установки обновления. Обнаружена Alfredo Pesoli (Bynario).</p>
+<p><b>CVSS:</b> 7.5 · <b>Активная эксплуатация:</b> По заявлению Apple, эксплуатации вне тестовых сред не зафиксировано <span class="badge prelim">Предварительная информация о точной дате публикации</span></p>
+<p><b>Официальная рекомендация:</b> Обновить macOS до указанных версий; отключить Screen Sharing, если не используется.</p>
+</div>
+
+<!-- TELEGRAM -->
+<h2 id="telegram">Telegram</h2>
+<div class="event high">
+<h4>CVE-2026-73031 — Stored XSS в групповых чатах Telegram</h4>
+<p><b>Дата публикации:</b> 11.08.2026 · <b>Источник:</b> GitHub Advisory Database / отраслевые агрегаторы CVE</p>
+<p><b>Краткое описание:</b> Высокая по серьезности уязвимость хранимого XSS, позволяющая удаленному атакующему выполнять произвольный JavaScript в браузере жертвы путем отправки сообщений с непросанированным HTML в общий чат/группу Telegram.</p>
+<p><b>CVSS:</b> 8.7 · <b>Активная эксплуатация:</b> Не подтверждена официально</p>
+<p><b>Ссылка:</b> <a href="https://github.com/advisories/GHSA-8hhg-crp9-v482" target="_blank">GitHub Advisory GHSA-8hhg-crp9-v482</a></p>
+</div>
+
+<!-- VIBER -->
+<h2 id="viber">Viber</h2>
+<div class="card">
+<p class="note">В отчетном 24-часовом окне новых уязвимостей или инцидентов, связанных с Viber, не обнаружено. Ранее раскрытая уязвимость Cloak-прокси (CVE-2025-13476, CERT/CC) относится к 2025 году и не входит в отчетный период.</p>
+</div>
+
+<!-- WHATSAPP -->
+<h2 id="whatsapp">WhatsApp</h2>
+<div class="card">
+<p class="note">Новых WhatsApp-специфичных уязвимостей или атак, опубликованных в отчетном окне (12–13.08.2026), не выявлено. Актуальный фон 2026 года (вне 24ч окна): CVE-2026-23863 (attachment spoofing, WhatsApp for Windows, NUL-byte в имени файла), CVE-2026-23866 (обработка AI-медиа для Instagram Reels, iOS/Android) и уязвимость расширения Adobe Acrobat «HermeticReader», позволявшая просматривать WhatsApp Web чаты (устранена в июле 2026).</p>
+</div>
+
+<!-- SIGNAL -->
+<h2 id="signal">Signal</h2>
+<div class="event low">
+<h4>Signal вводит Automatic Key Verification (AKV) — защита от server-level MITM</h4>
+<p><b>Дата публикации:</b> 11.08.2026 · <b>Источник:</b> Signal.org (официальный блог), BleepingComputer, The Register, Help Net Security</p>
+<p><b>Краткое описание:</b> Signal представила функцию автоматической верификации ключей, подтверждающую, что end-to-end зашифрованные сообщения достигают только предполагаемого получателя — без личной встречи — путем проверки tamper-evident журнала прозрачности ключей, аудируемого Cloudflare и Trail of Bits.</p>
+<p><b>Технические детали:</b> Функция противодействует подмене ключей на уровне сервера (компрометация инфраструктуры Signal или злонамеренный инсайдер, подменяющий публичный ключ, привязанный к номеру телефона цели). Верификация выполняется независимо самим пользователем, его контактами Signal и сторонними аудиторами — обеспечивая ту же гарантию, что и ручная проверка «security number», но без необходимости личной встречи или второго канала связи. Включается через профиль контакта → «View Safety Number» → «Verify automatically».</p>
+<p><b>Business impact:</b> Позитивное security-развитие, снижает риск MITM-атак на инфраструктуру мессенджера; рекомендуется включить сотрудникам, использующим Signal для чувствительной коммуникации.</p>
+<p><b>Ссылка:</b> <a href="https://signal.org/blog/automatic-key-verification/" target="_blank">Signal Blog — Introducing Automatic Key Verification</a> · <a href="https://www.bleepingcomputer.com/news/security/signal-adds-new-security-feature-to-thwart-man-in-the-middle-attacks/amp/" target="_blank">BleepingComputer</a></p>
+</div>
+
+<!-- NEW VULNERABILITIES TABLE -->
+<h2 id="newvulns">Новые уязвимости</h2>
+<table>
+<tr>
+<th>CVE</th><th>Название / Vendor</th><th>CVSS</th><th>Severity</th><th>Affected</th><th>Auth Req.</th><th>PoC</th><th>Known Exploited</th><th>Patch</th>
+</tr>
+<tr>
+<td>CVE-2026-68820</td><td>Windows AFD.sys EoP (Microsoft)</td><td>N/A (High/Crit EoP)</td><td><span class="badge crit">Critical</span></td><td>Windows 10/11/Server 2025</td><td>Нет (локально после доступа)</td><td>Нет (закрытая экспл.)</td><td>Да — CISA KEV</td><td>11.08.2026</td>
+</tr>
+<tr>
+<td>CVE-2026-55040</td><td>SharePoint JWT Auth Bypass (Microsoft)</td><td>Critical (не указан точный балл)</td><td><span class="badge crit">Critical</span></td><td>SharePoint Server on-prem</td><td>Нет</td><td>Да (Rapid7)</td><td>Да</td><td>11.08.2026</td>
+</tr>
+<tr>
+<td>CVE-2026-63520</td><td>SharePoint RCE chain (Microsoft)</td><td>Critical</td><td><span class="badge crit">Critical</span></td><td>SharePoint Server</td><td>Частично (в цепочке с CVE-2026-55040)</td><td>Да (Rapid7)</td><td>Предварительно</td><td>11.08.2026</td>
+</tr>
+<tr>
+<td>N/A (ShieldBreak)</td><td>Defender AV bypass (не-Microsoft PoC)</td><td>N/A</td><td><span class="badge crit">Critical</span></td><td>Windows 10/11 (25H2)/Server 2025</td><td>Нет</td><td>Да, публично</td><td>Не подтверждено</td><td>Нет патча</td>
+</tr>
+<tr>
+<td>CVE-2026-28139</td><td>Ajax Search Lite PHP Object Injection</td><td>9.8</td><td><span class="badge crit">Critical</span></td><td>≤ 4.14.4</td><td>Нет</td><td>Не подтвержден</td><td>Не подтверждено</td><td>4.14.5 (04.08.2026)</td>
+</tr>
+<tr>
+<td>CVE-2026-73033</td><td>Sucuri Security plugin (WordPress)</td><td>6.5</td><td><span class="badge med">Medium</span></td><td>≤ 2.7.3</td><td>Не уточнено</td><td>Не подтвержден</td><td>Не подтверждено</td><td>10.08.2026</td>
+</tr>
+<tr>
+<td>CVE-2026-73031</td><td>Telegram Stored XSS</td><td>8.7</td><td><span class="badge high">High</span></td><td>Web-клиент (групповые чаты)</td><td>Требуется участие в группе</td><td>Не подтвержден</td><td>Не подтверждено</td><td>11.08.2026</td>
+</tr>
+<tr>
+<td>CVE-2026-65400</td><td>Apple Screen Sharing Auth Bypass</td><td>7.5</td><td><span class="badge med">Medium</span></td><td>macOS Tahoe/Sequoia/Sonoma (до 26.6.1/15.7.9/14.8.9)</td><td>Нет</td><td>Не опубликован</td><td>Только в тестовой среде (по Apple)</td><td>Выпущен</td>
+</tr>
+</table>
+<p class="note">Mitigation/Workaround для всех перечисленных: применить официальный патч производителя; при отсутствии патча (ShieldBreak) — усилить мониторинг Defender-процессов, ограничить локальный доступ, рассмотреть compensating EDR-контроли.</p>
+
+<!-- ATTACKS -->
+<h2 id="attacks">Кибератаки</h2>
+
+<div class="event crit">
+<h4>Lazarus / Operation Dream Job — Windows 0-day + FudModule + Troy backdoor</h4>
+<p><b>Дата:</b> кампания активна с ~07.07.2026, раскрыта 12.08.2026 · <b>Тип:</b> Целевой шпионаж / APT · <b>Malware:</b> FudModule v3.1 (rootkit), Troy (backdoor), троянизированный PDF-viewer · <b>APT-группа:</b> Lazarus Group (Северная Корея)</p>
+<p><b>Цель:</b> Оборонные и аэрокосмические компании во Франции, Германии, Бразилии, Индии.</p>
+<p><b>Первичный вектор:</b> Фишинг через фальшивые вакансии на LinkedIn (Operation Dream Job) → вредоносный PDF / троянизированный PDF-viewer.</p>
+<p><b>Методы закрепления:</b> Kernel-level rootkit FudModule (отключение ETW-телеметрии, удаление minifilters, обход Smart App Control), бэкдор Troy для удаленного доступа.</p>
+<p><b>MITRE ATT&CK:</b> T1566 (Phishing), T1204.002 (Malicious File), T1068 (Exploitation for Privilege Escalation), T1014 (Rootkit), T1562.001 (Impair Defenses)</p>
+<p><b>Рекомендации:</b> Патч CVE-2026-68820; обучение персонала распознаванию фишинговых вакансий; мониторинг отключения ETW-провайдеров как индикатора компрометации.</p>
+</div>
+
+<div class="event high">
+<h4>Sandworm / UAC-0145 — фейковые собеседования, троянизированный WireGuard «SopraVPN»</h4>
+<p><b>Дата:</b> кампания активна с мая 2026, раскрыта CERT-UA 11–12.08.2026 · <b>Тип:</b> Шпионаж / первичный доступ · <b>Malware:</b> Троянизированный WireGuard-клиент «SopraVPN» с поддержкой нестандартной опции SymmetricKey (AES-256-GCM) · <b>APT-группа:</b> Sandworm (APT44 / Seashell Blizzard, ГРУ РФ), кластер UAC-0145</p>
+<p><b>Цель:</b> Системные администраторы и ИТ-специалисты (в первую очередь на Украине).</p>
+<p><b>Первичный вектор:</b> Имперсонация рекрутеров (в т.ч. под видом «ATLAS Business Group»), контакт через платформы поиска работы → Telegram → Zoom-собеседование (с живым англоговорящим собеседником) → доставка «неработающего» WireGuard-конфига → предложение установить троянизированный клиент SopraVPN с SourceForge и поддельного сайта под видом Sopra Steria Bulgaria.</p>
+<p><b>Методы закрепления:</b> Троянизированный VPN-клиент с бэкдор-функцией удаленного выполнения произвольных команд через кастомное поле конфигурации.</p>
+<p><b>MITRE ATT&CK:</b> T1566.002 (Phishing: Spearphishing Link), T1204.003 (Malicious Image/Software), T1059 (Command and Scripting Interpreter), T1071 (Application Layer Protocol — VPN-туннель как C2)</p>
+<p><b>Рекомендации:</b> Проверять легитимность рекрутеров/работодателей независимо; запрет установки VPN-клиентов не из официальных корпоративных источников; мониторинг нестандартных полей в конфигурациях WireGuard.</p>
+</div>
+
+<div class="event high">
+<h4>DeadLock Ransomware — блокчейн-инфраструктура на Polygon</h4>
+<p><b>Дата:</b> детальный разбор опубликован Microsoft 10.08.2026, продолжает освещаться 11–12.08.2026 · <b>Тип:</b> Ransomware / двойное вымогательство · <b>Malware:</b> DeadLock (Rust-based encryptor) · <b>Цель:</b> Организации в сфере ИТ, добычи, транспорта, производства, гостиничного бизнеса, товаров народного потребления (преимущественно Европа)</p>
+<p><b>Первичный вектор:</b> Не детализирован в доступных публикациях за отчетный период (требуется дальнейшее уточнение по данным Microsoft Security Blog).</p>
+<p><b>Методы закрепления/устойчивости:</b> Хранение конфигурации C2 и данных leak-сайта в смарт-контракте Polygon blockchain; использование Session (децентрализованный мессенджер) и Wasabi (decentralized storage) для связи с жертвами — снижает зависимость от доменов/серверов, которые могут быть изъяты правоохранительными органами.</p>
+<p><b>MITRE ATT&CK:</b> T1486 (Data Encrypted for Impact), T1567 (Exfiltration Over Web Service), T1071.001 (Web Protocols — через блокчейн-запросы)</p>
+<p><b>Масштаб:</b> 80+ организаций на leak-сайте по состоянию на июль 2026.</p>
+<p><b>Рекомендации:</b> Мониторинг исходящих запросов к RPC-эндпоинтам Polygon как индикатора C2-активности; резервное копирование offline; сегментация сети; готовность к отсутствию единой точки для law-enforcement takedown.</p>
+<p><b>Ссылка:</b> <a href="https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/" target="_blank">Microsoft Security Blog</a> · <a href="https://www.bleepingcomputer.com/news/security/deadlock-ransomware-uses-blockchain-to-resist-infrastructure-takedown/" target="_blank">BleepingComputer</a></p>
+</div>
+
+<div class="event med">
+<h4>Unsafe Group — атака на Presentations.AI (Индия)</h4>
+<p><b>Дата:</b> 12.08.2026 · <b>Тип:</b> Ransomware / вымогательство данных · <b>APT/группа:</b> «Unsafe» group · <b>Цель:</b> Presentations.AI (технологическая компания, Индия)</p>
+<p><b>Краткое описание:</b> Компания подверглась атаке вымогателей, критические данные под угрозой публикации. <span class="badge prelim">Предварительная информация</span> — детали атаки (вектор, объем данных) на момент публикации отчета официально не раскрыты.</p>
+</div>
+
+<!-- IOC -->
+<h2 id="ioc">IOC</h2>
+<div class="card">
+<p>Официальные производители и исследовательские команды на момент подготовки отчета <b>не опубликовали в открытом доступе</b> подробные машиночитаемые индикаторы компрометации (хэши, IP, домены) для ключевых кампаний отчетного периода:</p>
+<ul>
+<li><b>Lazarus / CVE-2026-68820 / FudModule / Troy:</b> технический разбор доступен у Microsoft/исследовательских блогов, но конкретные хэши файлов и C2-инфраструктура в проанализированных публикациях не приведены в открытом виде — рекомендуется обращаться к полным техническим отчетам (Microsoft MSTIC, лабораториям AhnLab/Gen Digital и т.п., упоминаемым в первоисточниках).</li>
+<li><b>Sandworm / UAC-0145 / SopraVPN:</b> CERT-UA опубликовал детальный технический бюллетень; специализированные платформы threat intel (например, Mallory.ai) содержат IOC «за стеной» — рекомендуется прямой запрос официального advisory CERT-UA.</li>
+<li><b>DeadLock ransomware:</b> Polygon smart-contract адрес(а) и связанные домены раскрыты в полном отчете Microsoft Security Blog (см. ссылку выше) — рекомендуется получить их из первоисточника для интеграции в SIEM/TIP.</li>
+</ul>
+<p class="note">IP / Domains / URLs / MD5 / SHA1 / SHA256 / Email / Registry / Mutex / YARA / Sigma / Snort / Suricata — не публиковались в достаточном для прямого включения объеме ни одним из проверенных на 12–13.08.2026 источников. Snort-правила для августовского Patch Tuesday доступны в отдельном бюллетене Cisco Talos.</p>
+<p><b>Ссылка:</b> <a href="https://blog.talosintelligence.com/microsoft-patch-tuesday-for-august-2026/" target="_blank">Cisco Talos — Snort Rules for August 2026 Patch Tuesday</a></p>
+</div>
+
+<!-- BREACHES -->
+<h2 id="breaches">Data Breaches & Cyber Incidents</h2>
+<table>
+<tr><th>Организация</th><th>Дата</th><th>Что произошло</th><th>Причина</th><th>Затронуто записей</th><th>Данные</th><th>Статус</th></tr>
+<tr>
+<td>Presentations.AI (Индия)</td><td>12.08.2026</td><td>Атака ransomware группировки «Unsafe»</td><td>Не раскрыта <span class="badge prelim">Предв.</span></td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование продолжается</td>
+</tr>
+<tr>
+<td>Canopy Support Services (Канада, некоммерч.)</td><td>Обнаружено 10.08.2026</td><td>Утечка данных</td><td>Не раскрыта</td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование</td>
+</tr>
+<tr>
+<td>Chung Tai Shin Chemical Industry Co., Ltd. (Тайвань)</td><td>Обнаружено 10.08.2026</td><td>Утечка данных</td><td>Не раскрыта</td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование</td>
+</tr>
+<tr>
+<td>Actini Group (Франция, промышленность)</td><td>Обнаружено 10.08.2026</td><td>Утечка данных</td><td>Не раскрыта</td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование</td>
+</tr>
+<tr>
+<td>AIMS Group (ОАЭ, конгломерат)</td><td>Обнаружено 10.08.2026</td><td>Утечка данных</td><td>Не раскрыта</td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование</td>
+</tr>
+<tr>
+<td>AnMed (США, здравоохранение)</td><td>Обнаружено 10.08.2026</td><td>Утечка данных</td><td>Не раскрыта</td><td>Не раскрыто</td><td>Не раскрыто</td><td>Расследование</td>
+</tr>
+</table>
+<p class="note"><b>Важная оговорка:</b> перечисленные утечки датированы обнаружением 10.08.2026, что частично выходит за строгие 24 часа окна отчета (12–13.08.2026), но включены как продолжающие оставаться актуальными и не имеющие более свежих альтернатив по указанным источникам на момент подготовки. Подробности (метод атаки, объем данных, официальные комментарии) не были общедоступны ни в одном из проверенных источников на момент публикации — статус: <span class="badge prelim">Предварительная информация</span>, рекомендуется дальнейший мониторинг.</p>
+<p><b>Рекомендации:</b> для организаций из смежных секторов (промышленность, здравоохранение, некоммерческий сектор) — проактивная проверка периметра, ротация учетных данных сторонних поставщиков, мониторинг Dark Web на предмет упоминания брендов.</p>
+</div>
+
+<!-- BUSINESS IMPACT -->
+<h2 id="bi">Business Impact (сводно по ключевым событиям)</h2>
+<table>
+<tr><th>Событие</th><th>Вероятность эксплуатации</th><th>Влияние на бизнес</th><th>Риск для инфраструктуры</th><th>Риск для пользователей</th><th>Риск для облака</th><th>Приоритет</th></tr>
+<tr><td>CVE-2026-68820 (Windows AFD.sys)</td><td>Высокая (уже эксплуатируется)</td><td>Высокое</td><td><span class="badge crit">Critical</span></td><td>Средний</td><td>Низкий</td><td><span class="badge crit">Critical</span></td></tr>
+<tr><td>CVE-2026-55040/63520 (SharePoint)</td><td>Высокая (эксплуатация в часах)</td><td>Высокое</td><td><span class="badge crit">Critical</span></td><td>Средний</td><td>Средний (SharePoint Online не затронут — только on-prem)</td><td><span class="badge crit">Critical</span></td></tr>
+<tr><td>ShieldBreak (Defender bypass)</td><td>Средняя (PoC публичен, патча нет)</td><td>Высокое</td><td><span class="badge high">High</span></td><td>Средний</td><td>Низкий</td><td><span class="badge high">High</span></td></tr>
+<tr><td>DeadLock ransomware</td><td>Средняя</td><td>Высокое (при попадании в жертвы)</td><td><span class="badge high">High</span></td><td>Высокий</td><td>Средний</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Sandworm / UAC-0145</td><td>Средняя (целевая кампания)</td><td>Среднее-Высокое</td><td><span class="badge high">High</span></td><td>Высокий (для целевых лиц)</td><td>Низкий</td><td><span class="badge high">High</span></td></tr>
+<tr><td>WordPress (BdThemes/Ajax Search Lite/Sucuri)</td><td>Высокая (часы после раскрытия)</td><td>Среднее</td><td><span class="badge med">Medium</span></td><td>Средний</td><td>Низкий</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Telegram XSS (CVE-2026-73031)</td><td>Средняя</td><td>Низкое-Среднее</td><td><span class="badge low">Low</span></td><td>Средний</td><td>Низкий</td><td><span class="badge med">Medium</span></td></tr>
+<tr><td>Apple Screen Sharing (CVE-2026-65400)</td><td>Низкая (нужен ручной запуск Screen Sharing)</td><td>Низкое</td><td><span class="badge low">Low</span></td><td>Низкий</td><td>Низкий</td><td><span class="badge med">Medium</span></td></tr>
+<tr><td>Signal AKV (новая функция)</td><td>N/A (защитная мера)</td><td>Позитивное</td><td><span class="badge low">Low</span></td><td>Снижение риска</td><td>N/A</td><td>Рекомендовано к внедрению</td></tr>
+</table>
+
+<!-- SOURCES -->
+<h2 id="sources">Источники</h2>
+<div class="card">
+<ul class="src-link">
+<li><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-august-2026-patch-tuesday-fixes-400-flaws-3-zero-days/" target="_blank">BleepingComputer — Microsoft August 2026 Patch Tuesday fixes 400 flaws, 3 zero-days</a></li>
+<li><a href="https://cybersecuritynews.com/microsoft-patch-tuesday-update-august-2026/" target="_blank">cybersecuritynews.com — Microsoft Patch Tuesday Update August 2026</a></li>
+<li><a href="https://www.tenable.com/blog/microsofts-august-2026-patch-tuesday-addresses-398-cves-cve-2026-68820" target="_blank">Tenable — August 2026 Microsoft Patch Tuesday</a></li>
+<li><a href="https://blog.talosintelligence.com/microsoft-patch-tuesday-for-august-2026/" target="_blank">Cisco Talos — Patch Tuesday for August 2026</a></li>
+<li><a href="https://thehackernews.com/2026/08/lazarus-exploits-windows-zero-day-to.html" target="_blank">The Hacker News — Lazarus Exploits Windows Zero-Day</a></li>
+<li><a href="https://www.securityweek.com/fresh-windows-zero-day-exploited-in-north-korean-cyberattacks/" target="_blank">SecurityWeek — Fresh Windows Zero-Day Exploited in North Korean Cyberattacks</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/lazarus-hackers-exploited-windows-zero-day-to-target-defense-firms/" target="_blank">BleepingComputer — Lazarus hackers exploited Windows zero-day</a></li>
+<li><a href="https://www.forbes.com/sites/daveywinder/2026/08/12/microsoft-windows-0-day-attack-deploys-lazarus-rootkit-patch-now/" target="_blank">Forbes — Microsoft Windows 0-Day Attack Deploys Lazarus Rootkit</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/new-microsoft-defender-shieldbreak-zero-day-grants-system-privileges/" target="_blank">BleepingComputer — New Microsoft Defender 'ShieldBreak' zero-day</a></li>
+<li><a href="https://thehackernews.com/2026/08/shieldbreak-zero-day-poc-claims.html" target="_blank">The Hacker News — ShieldBreak Zero-Day PoC</a></li>
+<li><a href="https://techcrunch.com/2026/08/12/after-microsoft-threatened-legal-action-a-security-researcher-publishes-a-new-windows-zero-day-bug/" target="_blank">TechCrunch — Security researcher publishes new Windows zero-day</a></li>
+<li><a href="https://www.theregister.com/cyber-crime/2026/08/12/microsoft-vendetta-hacker-has-a-new-zero-day-that-gives-system-privileges-on-fully-patched-windows/5286889" target="_blank">The Register — Microsoft-vendetta hacker has a new zero day</a></li>
+<li><a href="https://thehackernews.com/2026/08/attackers-exploit-sharepoint.html" target="_blank">The Hacker News — Attackers Exploit SharePoint Authentication Bypass</a></li>
+<li><a href="https://www.securityweek.com/sharepoint-vulnerability-exploited-shortly-after-poc-release/" target="_blank">SecurityWeek — SharePoint Vulnerability Exploited Shortly After PoC Release</a></li>
+<li><a href="https://www.rapid7.com/blog/post/ve-cve-2026-55040-microsoft-sharepoint-jwt-token-authentication-bypass-fixed/" target="_blank">Rapid7 — CVE-2026-55040 SharePoint JWT Token Authentication Bypass</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/microsoft/hackers-leverage-new-microsoft-sharepoint-exploit-in-attacks/" target="_blank">BleepingComputer — Hackers leverage new Microsoft SharePoint exploit</a></li>
+<li><a href="https://thehackernews.com/2026/08/bdthemes-supply-chain-attack-poisons.html" target="_blank">The Hacker News — BdThemes Supply Chain Attack</a></li>
+<li><a href="https://freshysites.com/security-bulletins/sucuri-security-wordpress-plugin-vulnerability-cve-2026-73033/" target="_blank">Freshy Sites — Sucuri Security WordPress Plugin Vulnerability CVE-2026-73033</a></li>
+<li><a href="https://www.webmastered.com/blog/wordpress-plugin-exploits-security-guidance/" target="_blank">webmastered.com — WordPress Plugin Exploits Launch Within Hours of Disclosure</a></li>
+<li><a href="https://www.csa.gov.sg/alerts-and-advisories/alerts/al-2026-085/" target="_blank">CSA Singapore — Active Exploitation of Critical Vulnerabilities in Joomla Extensions</a></li>
+<li><a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-L4XfJg8S" target="_blank">Cisco — Advance Notification 05.08.2026</a></li>
+<li><a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-clamav-WuuvVd26" target="_blank">Cisco — ClamAV Vulnerabilities Advisory</a></li>
+<li><a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-hardening-iosxe-V8NMuMZJ" target="_blank">Cisco — IOS XE Security Hardening Release August 2026</a></li>
+<li><a href="https://www.securityweek.com/microsoft-apple-release-fresh-security-updates/" target="_blank">SecurityWeek — Microsoft, Apple Release Fresh Security Updates</a></li>
+<li><a href="https://github.com/advisories/GHSA-8hhg-crp9-v482" target="_blank">GitHub Advisory Database — Telegram Stored XSS CVE-2026-73031</a></li>
+<li><a href="https://signal.org/blog/automatic-key-verification/" target="_blank">Signal Blog — Introducing Automatic Key Verification</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/signal-adds-new-security-feature-to-thwart-man-in-the-middle-attacks/amp/" target="_blank">BleepingComputer — Signal adds new security feature</a></li>
+<li><a href="https://www.theregister.com/security/2026/08/11/signal-adds-an-extra-layer-of-security-to-make-sure-youre-actually-chatting-with-the-right-person/5286461" target="_blank">The Register — Signal adds an extra layer of security</a></li>
+<li><a href="https://cybersecuritynews.com/sandworm-fake-job-interviews/" target="_blank">cybersecuritynews.com — Sandworm Fake Job Interviews</a></li>
+<li><a href="https://thehackernews.com/2026/08/sandworm-linked-uac-0145-uses-fake-job.html" target="_blank">The Hacker News — Sandworm-Linked UAC-0145 Uses Fake Job Interviews</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/sandworm-hackers-target-it-pros-with-trojanized-wireguard-vpn-client/" target="_blank">BleepingComputer — Sandworm hackers target IT pros with trojanized WireGuard</a></li>
+<li><a href="https://www.techtimes.com/articles/323950/20260811/sandworm-recruiter-scam-targets-ukrainian-sysadmins-deploys-hidden-wireguard-trojan.htm" target="_blank">TechTimes — Sandworm Recruiter Scam Targets Ukrainian Sysadmins</a></li>
+<li><a href="https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/" target="_blank">Microsoft Security Blog — DeadLock ransomware: Rust-based encryptor with decentralized infrastructure</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/deadlock-ransomware-uses-blockchain-to-resist-infrastructure-takedown/" target="_blank">BleepingComputer — DeadLock ransomware uses blockchain to resist takedown</a></li>
+<li><a href="https://thehackernews.com/2026/08/deadlock-ransomware-uses-polygon-smart.html" target="_blank">The Hacker News — DeadLock Ransomware Uses Polygon Smart Contracts</a></li>
+<li><a href="https://www.dexpose.io/category/ransomware-attacks/" target="_blank">Dexpose — Ransomware Attack News (Presentations.AI / Unsafe group)</a></li>
+<li><a href="https://www.pkware.com/blog/2026-data-breaches" target="_blank">PKWARE — 2026 Data Breaches</a></li>
+<li><a href="https://krebsonsecurity.com/" target="_blank">Krebs on Security — Homepage / Latest Warnings</a></li>
+</ul>
+</div>
+
+</div>
+
+<footer>
+Отчет сформирован автоматически на основе публично доступных материалов, опубликованных в период 12–13 августа 2026 (UTC). Сведения, помеченные как «Предварительная информация», требуют дополнительного подтверждения из официальных источников. Данный документ предназначен для внутреннего использования SOC / Blue Team / Vulnerability Management и не заменяет официальные бюллетени вендоров.
+</footer>
+
+</body>
+</html>
