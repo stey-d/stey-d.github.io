@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Практичний security &amp; privacy довідник: Signal, Telegram, WhatsApp, Viber</title>
+<meta name="description" content="Практичний довідник з налаштування безпеки та приватності Signal, Telegram, WhatsApp і Viber. Кожен факт підтверджено офіційною документацією розробників. Мова: українська.">
+<meta name="author" content="Security &amp; privacy guide">
+<meta name="document-version" content="1.0">
+<meta name="created" content="2026-08-13">
+<meta name="sources-checked" content="2026-08-13">
+<style>
+  :root{
+    --bg:#f0f4f8; --surface:#ffffff; --surface2:#f8f9fa;
+    --ink:#0f172a; --ink2:#1e293b; --muted:#5b6b7c; --line:#dfe6ee;
+    --signal:#3A76F0; --telegram:#229ED9; --whatsapp:#1aa851; --viber:#7360F2;
+    --risk:#c0392b; --warn:#b7791f; --ok:#177245; --nok:#8a5a00;
+    --accent:var(--ink2);
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+    line-height:1.55; font-size:16px;
+  }
+  a{color:#1d4ed8;} a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px;}
+  .skip{position:absolute;left:-9999px;top:0;background:#fff;padding:8px 14px;z-index:100;}
+  .skip:focus{left:8px;top:8px;}
+
+  .layout{display:grid;grid-template-columns:264px minmax(0,1fr);gap:0;max-width:1280px;margin:0 auto;}
+  nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:22px 18px;background:var(--surface);border-right:1px solid var(--line);}
+  nav.side h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px;}
+  nav.side a{display:block;color:var(--ink2);text-decoration:none;padding:5px 8px;border-radius:8px;font-size:14px;}
+  nav.side a:hover{background:var(--surface2);}
+  main{padding:34px 28px 80px;min-width:0;}
+
+  .hero{background:linear-gradient(150deg,#eaf1f8,#ffffff);border:1px solid var(--line);border-radius:16px;padding:34px 30px;margin-bottom:26px;}
+  .hero h1{font-size:30px;line-height:1.15;margin:.1em 0 .35em;}
+  .hero p{color:var(--ink2);margin:.4em 0;max-width:70ch;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-size:13.5px;color:var(--muted);}
+  .meta b{color:var(--ink2);}
+
+  section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 24px 8px;margin:0 0 22px;}
+  section>h2{font-size:23px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  section>h3{font-size:18px;margin:22px 0 8px;}
+  p{margin:.5em 0 1em;}
+  ul,ol{margin:.3em 0 1em;padding-left:1.35em;} li{margin:.28em 0;}
+
+  .badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 9px;border-radius:999px;vertical-align:middle;white-space:nowrap;}
+  .b-base{background:#e4edfb;color:#1e40af;} .b-plus{background:#fff3d6;color:#8a5b00;} .b-max{background:#eddcff;color:#5b21b6;}
+  .b-risk{background:#fde3df;color:var(--risk);} .b-warn{background:#fdf1d6;color:var(--warn);}
+  .b-ok{background:#dff3e6;color:var(--ok);} .b-nok{background:#f1e4cf;color:var(--nok);}
+
+  .path{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:var(--surface2);border:1px solid var(--line);border-radius:7px;padding:3px 8px;display:inline-block;margin:2px 0;}
+
+  details.app{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;margin:14px 0;background:var(--surface2);}
+  details.app>summary{cursor:pointer;list-style:none;padding:14px 16px;font-size:19px;font-weight:700;display:flex;align-items:center;gap:10px;}
+  details.app>summary::-webkit-details-marker{display:none;}
+  details.app>summary .chev{margin-left:auto;transition:transform .2s;color:var(--muted);}
+  details.app[open]>summary .chev{transform:rotate(90deg);}
+  details.app .inner{padding:4px 16px 16px;}
+  .app-signal{--accent:var(--signal);} .app-telegram{--accent:var(--telegram);}
+  .app-whatsapp{--accent:var(--whatsapp);} .app-viber{--accent:var(--viber);}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);display:inline-block;flex:0 0 auto;}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0;}
+  .card h4{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .grid{display:grid;grid-template-columns:120px 1fr;gap:4px 14px;font-size:14.5px;}
+  .grid dt{color:var(--muted);font-weight:600;} .grid dd{margin:0;}
+
+  .callout{border-radius:10px;padding:12px 15px;margin:12px 0;font-size:14.5px;border:1px solid;}
+  .c-not{background:#fbf0ef;border-color:#f2c9c3;} .c-not b{color:var(--risk);}
+  .c-warn{background:#fdf6e6;border-color:#f0dca8;} .c-warn b{color:var(--warn);}
+  .c-info{background:#eef4fb;border-color:#cfe0f2;}
+  .c-not::before{content:"⛔ ";} .c-warn::before{content:"⚠ ";}
+
+  .table-scroll{overflow-x:auto;margin:12px 0 18px;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  thead th{background:var(--surface2);position:sticky;top:0;}
+  caption{text-align:left;color:var(--muted);font-size:13px;margin-bottom:6px;}
+  .th-signal{color:var(--signal);} .th-telegram{color:var(--telegram);} .th-whatsapp{color:var(--whatsapp);} .th-viber{color:var(--viber);}
+
+  .score{display:inline-flex;gap:3px;} .score i{width:11px;height:11px;border-radius:2px;background:#d5dee7;display:inline-block;} .score i.on{background:var(--accent,#334155);}
+
+  .checklist{list-style:none;padding:0;} .checklist li{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line);}
+  .checklist li:first-child{border-top:none;} .checklist .box{width:18px;height:18px;border:2px solid var(--muted);border-radius:4px;flex:0 0 auto;margin-top:2px;}
+
+  .src-list{font-size:14px;} .src-list li{margin:.4em 0;word-break:break-word;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:24px;}
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    nav.side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);}
+    main{padding:22px 16px 60px;}
+    .grid{grid-template-columns:1fr;} .grid dt{margin-top:6px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none;}}
+  @media print{
+    body{background:#fff;font-size:12px;}
+    nav.side,.chev,.skip{display:none!important;}
+    .layout{display:block;max-width:none;} main{padding:0;}
+    section,details.app,.card{break-inside:avoid;border-color:#bbb;box-shadow:none;}
+    details.app{background:#fff;} details.app:not([open])>.inner{display:block;} /* друкуємо все */
+    details.app>summary{pointer-events:none;}
+    a{color:#000;text-decoration:underline;} a[href]::after{content:" (" attr(href) ")";font-size:9px;color:#333;}
+    .hero{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Перейти до змісту</a>
+<div class="layout">
+
+<nav class="side" aria-label="Навігація документа">
+  <strong>Зміст</strong>
+  <h2>Основа</h2>
+  <a href="#pryntsypy">1. Базові принципи</a>
+  <a href="#zagrozy">2. Модель загроз</a>
+  <a href="#e2ee">3. E2EE та інші механізми</a>
+  <a href="#porivnyannya">4. Порівняння месенджерів</a>
+  <h2>Месенджери</h2>
+  <a href="#signal">5. Signal</a>
+  <a href="#telegram">6. Telegram</a>
+  <a href="#whatsapp">7. WhatsApp</a>
+  <a href="#viber">8. Viber</a>
+  <h2>Наскрізні теми</h2>
+  <a href="#profili">9. Рівні безпеки</a>
+  <a href="#ocinka">10. Оцінка контролю</a>
+  <a href="#2fa">11. 2FA та захист акаунтів</a>
+  <a href="#sesiyi">12. Сесії та пристрої</a>
+  <a href="#backup">13. Резервні копії</a>
+  <a href="#metadata">14. Метадані</a>
+  <a href="#nevyrishuye">15. Що не вирішують</a>
+  <a href="#konfiguraciyi">16. Рекомендовані конфігурації</a>
+  <a href="#checklist">17. Фінальний checklist</a>
+  <a href="#dzherela">18. Джерела</a>
+</nav>
+
+<main id="main">
+
+  <header class="hero">
+    <span class="badge b-ok">ПІДТВЕРДЖЕНО ОФІЦІЙНОЮ ДОКУМЕНТАЦІЄЮ</span>
+    <h1>Практичний довідник з безпеки та приватності:<br>Signal · Telegram · WhatsApp · Viber</h1>
+    <p>Цей документ показує, які функції безпеки реально підтверджують розробники, як їх увімкнути та від яких загроз вони захищають. Пріоритет – точність, а не обсяг. Там, де офіційна документація чогось не підтверджує, це позначено окремо, а не додумано.</p>
+    <p><strong>Головна теза:</strong> «увімкнено шифрування» ще не означає «повна приватність». Захист складається з окремих шарів – шифрування переписки, захисту акаунта, контролю сесій, резервних копій, метаданих і безпеки самого пристрою. Далі кожен шар розібрано окремо.</p>
+    <div class="meta">
+      <span><b>Мова:</b> українська</span>
+      <span><b>Версія документа:</b> 1.0</span>
+      <span><b>Дата створення:</b> 13 серпня 2026</span>
+      <span><b>Дата перевірки джерел:</b> 13 серпня 2026</span>
+    </div>
+  </header>
+
+  <!-- 1 -->
+  <section id="pryntsypy" aria-labelledby="h-pryntsypy">
+    <h2 id="h-pryntsypy">1. Базові принципи безпеки</h2>
+    <p>Ці принципи діють для всіх чотирьох застосунків. Вони не залежать від конкретного меню і виконуються першими.</p>
+    <ul>
+      <li><strong>Спершу захист акаунта, потім усе інше.</strong> Поки акаунт можна перехопити через SMS-код, решта налаштувань приватності другорядна.</li>
+      <li><strong>Другий фактор – застосунок-автентифікатор або окремий пароль/PIN, а не лише SMS.</strong> SMS перехоплюється через SIM-swap.</li>
+      <li><strong>Захист самого пристрою.</strong> Жодне шифрування в застосунку не рятує скомпрометований або розблокований телефон (підтверджено, зокрема, FAQ Telegram, розділ «Can Telegram protect me against everything?»).</li>
+      <li><strong>Мінімізація збережених даних.</strong> Автовидалення, контроль резервних копій і сесій зменшують обсяг того, що взагалі можна вилучити.</li>
+      <li><strong>Розрізняйте факт і рекомендацію.</strong> Нижче для кожної функції окремо позначено, що <em>офіційно підтверджено</em>, а що є <em>практичною рекомендацією</em>.</li>
+    </ul>
+    <div class="callout c-warn"><b>Увага.</b> Точна назва або розташування пункту меню може відрізнятися залежно від версії застосунку та платформи. Де офіційне джерело не фіксує точний шлях, це позначено як «шлях не підтверджено офіційною документацією».</div>
+  </section>
+
+  <!-- 2 -->
+  <section id="zagrozy" aria-labelledby="h-zagrozy">
+    <h2 id="h-zagrozy">2. Модель загроз</h2>
+    <p>Налаштування має сенс, лише коли зрозуміло, від чого воно захищає. Нижче – загрози, на які посилаються картки функцій.</p>
+    <div class="table-scroll">
+    <table>
+      <caption>Загрози та який шар їх стримує</caption>
+      <thead><tr><th>Загроза</th><th>Що стримує ризик</th></tr></thead>
+      <tbody>
+        <tr><td>Захоплення акаунта, SIM-swap, крадіжка verification code</td><td>Двоетапна перевірка / 2FA, Registration Lock, PIN, passkey</td></tr>
+        <tr><td>Фізичний доступ до пристрою</td><td>Блокування застосунку, screen lock, автовидалення, блокування ОС</td></tr>
+        <tr><td>Захоплення активної або Desktop/Web-сесії</td><td>Керування сесіями, видалення підключених пристроїв</td></tr>
+        <tr><td>Перехоплення переписки в мережі</td><td>E2EE (де застосовується), client-server шифрування</td></tr>
+        <tr><td>Компрометація резервних копій</td><td>Шифрування бекапів, відмова від хмарного бекапу</td></tr>
+        <tr><td>Розкриття номера, профілю, метаданих</td><td>Налаштування приватності номера, username, sealed sender</td></tr>
+        <tr><td>Небажані контакти, спам</td><td>Обмеження, хто може писати / телефонувати / додавати в групи</td></tr>
+        <tr><td>Шкідливе ПЗ, spyware, root/jailbreak</td><td>Не вирішується налаштуваннями месенджера (див. розділ 15)</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="e2ee" aria-labelledby="h-e2ee">
+    <h2 id="h-e2ee">3. Наскрізне шифрування (E2EE) та інші механізми: ключова відмінність</h2>
+    <p>Формула «E2EE = повна приватність» хибна. Різні механізми захищають різні речі:</p>
+    <ul>
+      <li><strong>End-to-End Encryption (E2EE)</strong> – читати можуть лише співрозмовники; сервіс не має ключів.</li>
+      <li><strong>Client-server шифрування</strong> – трафік захищено між вами й сервером, але сервер може читати вміст.</li>
+      <li><strong>Encryption at rest / server-side storage</strong> – дані зашифровані на сервері, але під контролем сервісу.</li>
+      <li><strong>Backup encryption</strong> – резервна копія має власну модель захисту, окрему від чату.</li>
+      <li><strong>Metadata</strong> – хто, кому, коли, з якого пристрою; зазвичай <em>не</em> покрито E2EE.</li>
+      <li><strong>Authentication / device security</strong> – захист входу та самого пристрою; окремий шар.</li>
+    </ul>
+    <div class="callout c-info">Коротко про кожен застосунок: <strong>Signal</strong> і <strong>WhatsApp</strong> – E2EE у переписці за замовчуванням; <strong>Viber</strong> – E2EE за замовчуванням для чатів і 1:1 дзвінків; <strong>Telegram</strong> – E2EE лише в Secret Chats та дзвінках, а звичайні (хмарні) чати E2EE <em>не</em> мають. Деталі та джерела – у розділах 5–8.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="porivnyannya" aria-labelledby="h-porivnyannya">
+    <h2 id="h-porivnyannya">4. Порівняння чотирьох месенджерів</h2>
+    <p>Заповнено лише підтвердженими даними. «Немає підтверджених даних» означає, що зазначені офіційні джерела цього прямо не фіксують.</p>
+    <div class="table-scroll">
+    <table>
+      <caption>Зведена матриця (за офіційною документацією розробників)</caption>
+      <thead><tr><th>Параметр</th><th class="th-signal">Signal</th><th class="th-telegram">Telegram</th><th class="th-whatsapp">WhatsApp</th><th class="th-viber">Viber</th></tr></thead>
+      <tbody>
+        <tr><td>E2EE</td><td>Так (усі повідомлення й дзвінки)</td><td>Так, але лише Secret Chats і дзвінки</td><td>Так (чати, дзвінки, медіа, групи)</td><td>Так (чати, групи, 1:1 дзвінки)</td></tr>
+        <tr><td>E2EE за замовчуванням</td><td>Так</td><td>Ні (звичайні чати – client-server)</td><td>Так</td><td>Так</td></tr>
+        <tr><td>Cloud chats (сервер має доступ)</td><td>Ні (мінімум даних на сервері)</td><td>Так (звичайні чати, групи, канали)</td><td>Ні</td><td>Ні (вміст чатів сервер не читає)</td></tr>
+        <tr><td>2FA / додатковий захист входу</td><td>PIN + Registration Lock</td><td>2-Step Verification (пароль) + Passkey</td><td>Two-step verification (PIN) + Passkey</td><td>2-step verification (PIN + email)</td></tr>
+        <tr><td>PIN</td><td>Так (Signal PIN)</td><td>Passcode Lock (на застосунок)</td><td>PIN двоетапної перевірки</td><td>PIN (2-step та Hidden Chats)</td></tr>
+        <tr><td>App Lock / блокування застосунку</td><td>Screen Lock</td><td>Passcode Lock</td><td>App lock (біометрія/пароль)</td><td>Блокування застосунку та Desktop</td></tr>
+        <tr><td>Auto-delete / зникання</td><td>Так</td><td>Так (Auto-Delete, self-destruct у Secret Chats)</td><td>Так (disappearing messages)</td><td>Так (у секретних чатах)</td></tr>
+        <tr><td>Керування сесіями</td><td>Linked devices</td><td>Devices / Active Sessions</td><td>Linked devices</td><td>Desktop-сесії / вихід</td></tr>
+        <tr><td>Приватність номера</td><td>Так (Nobody + usernames)</td><td>Так (Phone Number)</td><td>Частково (Last seen/Profile тощо; сам номер = логін)</td><td>Керування показом статусів; сервер бачить номер</td></tr>
+        <tr><td>Захист резервних копій</td><td>Дані на сервері шифруються PIN; бекап – окремо</td><td>Хмара = бекап (Telegram має доступ); Secret Chats не бекапляться</td><td>E2EE-бекап (пароль або 64-значний ключ), опційно</td><td>Немає підтверджених даних у зазначених джерелах</td></tr>
+        <tr><td>Linked / пов'язані пристрої</td><td>Так</td><td>Так</td><td>Так</td><td>Так (Desktop)</td></tr>
+        <tr><td>Основний ризик</td><td>Витік метаданих контакту / пристрій</td><td>Хибне відчуття E2EE у звичайних чатах</td><td>Незашифрований бекап, якщо не увімкнути E2EE-бекап</td><td>Метадані на сервері; деталі бекапу не підтверджені</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- 5 SIGNAL -->
+  <section id="signal" aria-labelledby="h-signal">
+    <h2 id="h-signal">5. Signal</h2>
+    <p><strong>Модель шифрування (підтверджено).</strong> Signal застосовує E2EE до всіх повідомлень і дзвінків за замовчуванням; сервіс не має ключів до вмісту. Signal свідомо зберігає мінімум даних на сервері. Signal PIN шифрує дані вашого акаунта (наприклад, профіль і збережені контакти), тому саме PIN відновлює їх при переустановленні.</p>
+
+    <details class="app app-signal" open>
+      <summary><span class="dot"></span> Signal – ключові налаштування <span class="chev">›</span></summary>
+      <div class="inner">
+
+        <div class="card">
+          <h4><span class="dot"></span> Signal PIN <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Особистий PIN, що шифрує дані акаунта та дає змогу їх відновити.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Account → Create your PIN</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Втрати даних; є основою для Registration Lock.</dd>
+            <dt>Обмеження</dt><dd>PIN не замінює пароль/блокування пристрою. Простий PIN (1234) небезпечний.</dd>
+            <dt>Джерело</dt><dd><a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">support.signal.org</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Registration Lock <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Блокування реєстрації: без вашого PIN ніхто не зареєструє Signal на ваш номер.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Account → Registration Lock</span> (після створення PIN)</dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>SIM-swap і крадіжки номера – знижує ризик захоплення акаунта при компрометації SMS-коду.</dd>
+            <dt>Обмеження</dt><dd>За офіційними даними, після тривалої неактивності захист послаблюється; тримайте акаунт активним.</dd>
+            <dt>Джерело</dt><dd><a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">support.signal.org</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Приватність номера + Username <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Приховання номера від співрозмовників і можливість знаходити вас за username замість номера.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy → Phone Number → Who can see my number: Nobody</span>; <span class="path">Who can find me by my number: Nobody</span>; username – <span class="path">Settings → Profile</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS (потрібна актуальна версія)</dd>
+            <dt>Захищає від</dt><dd>Розкриття номера телефону та пошуку вас за номером.</dd>
+            <dt>Обмеження</dt><dd>Хто вже має ваш номер у контактах, усе одно його бачить. Username – це «хендл для пошуку», не анонімність.</dd>
+            <dt>Джерело</dt><dd><a href="https://support.signal.org/hc/en-us/articles/6712070553754-Phone-Number-Privacy-and-Usernames">support.signal.org</a>, <a href="https://signal.org/blog/phone-number-privacy-usernames/">signal.org/blog</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> App Security: Screen Lock, Screen Security, Incognito Keyboard <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Screen Lock вимагає біометрію/код для відкриття Signal; Screen Security ховає вміст у перемикачі застосунків і блокує скриншоти; Incognito Keyboard забороняє клавіатурі навчатися на введеному.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy → App Security</span> (на iOS Screen Security блюрить перемикач автоматично)</dd>
+            <dt>Платформа</dt><dd>Android / iOS (є відмінності)</dd>
+            <dt>Захищає від</dt><dd>Фізичного доступу до розблокованого пристрою, підглядання, витоку через клавіатуру.</dd>
+            <dt>Обмеження</dt><dd>Не захищає від скомпрометованої ОЗ. Скриншот іншим пристроєм/камерою зупинити неможливо.</dd>
+            <dt>Джерело</dt><dd><a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">support.signal.org</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Sealed Sender, Relay Calls, Safety Number, Disappearing messages <span class="badge b-max">МАКСИМАЛЬНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що роблять</dt><dd>Sealed Sender ховає відправника від сервера для встановлених контактів; Relay Calls пускає дзвінок через сервер Signal, щоб не розкрити IP; Safety Number дає звірити ключі співрозмовника; Disappearing messages задає автовидалення.</dd>
+            <dt>Де</dt><dd>Sealed sender і relay calls – <span class="path">Settings → Privacy → Advanced</span>; автовидалення для нових чатів – <span class="path">Settings → Privacy → Disappearing Messages</span>; safety number – в екрані чату.</dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Витоку метаданих відправника; розкриття IP у дзвінку; MITM (через звірку ключа); накопичення історії.</dd>
+            <dt>Обмеження</dt><dd>Relay Calls знижує якість дзвінка. Disappearing messages не гарантує знищення всіх копій (скриншот, фото екрана).</dd>
+            <dt>Джерело</dt><dd><a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">support.signal.org</a></dd>
+          </dl>
+        </div>
+
+        <div class="callout c-not"><b>Що ці налаштування НЕ роблять.</b> PIN і блокування екрана не замінюють захист самого пристрою. E2EE Signal не захищає вже скомпрометований телефон із spyware. Приховання номера не робить вас анонімним для тих, хто вже має ваш номер.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 6 TELEGRAM -->
+  <section id="telegram" aria-labelledby="h-telegram">
+    <h2 id="h-telegram">6. Telegram</h2>
+    <p><strong>Модель шифрування (підтверджено).</strong> Telegram має два шари: <em>client-server</em> шифрування для Cloud Chats (звичайні приватні чати, групи та канали) і <em>client-client</em> (E2EE) для Secret Chats. Дзвінки (аудіо та відео) також E2EE. Звичайні хмарні чати зберігаються на серверах Telegram, і сервіс технічно має до них доступ; Secret Chats до хмари не належать і прив'язані до пристрою.</p>
+    <div class="callout c-warn"><b>Ключове.</b> Звичайні Cloud Chats Telegram <b>не</b> використовують той самий E2EE, що й Secret Chats. Не сприймайте хмарний чат як наскрізно зашифрований.</div>
+
+    <details class="app app-telegram" open>
+      <summary><span class="dot"></span> Telegram – ключові налаштування <span class="chev">›</span></summary>
+      <div class="inner">
+
+        <div class="card">
+          <h4><span class="dot"></span> Cloud Chats vs Secret Chats <span class="badge b-ok">ПІДТВЕРДЖЕНО</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Cloud Chats – типові чати, синхронізуються між пристроями, зберігаються в хмарі. Secret Chats – E2EE, лише на пристрої-джерелі, без пересилання, з таймером самознищення.</dd>
+            <dt>Де</dt><dd>Secret Chat: <span class="path">Профіль контакту → ⋮ → Start Secret Chat</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS (Secret Chats недоступні у веб-версії)</dd>
+            <dt>Захищає від</dt><dd>Secret Chats: перехоплення й доступу сервера до вмісту. Cloud Chats: перехоплення в мережі (але не доступу Telegram).</dd>
+            <dt>Обмеження</dt><dd>Групи й канали завжди Cloud (не E2EE). Secret Chats зникають при виході з акаунта.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#secret-chats">telegram.org/faq</a>, <a href="https://core.telegram.org/api/end-to-end">core.telegram.org</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> 2-Step Verification <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Додатковий пароль на вхід: для входу потрібні і SMS-код, і пароль. Можна додати email для відновлення.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy and Security → 2-Step Verification</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop</dd>
+            <dt>Захищає від</dt><dd>Захоплення акаунта при компрометації лише SMS-коду (SIM-swap).</dd>
+            <dt>Обмеження</dt><dd>Якщо забути пароль без email для відновлення – доступ до акаунта втрачається безповоротно.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#q-how-does-2-step-verification-work">telegram.org/faq</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Passkey <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Додатковий метод входу замість SMS: за PIN-кодом чи біометрією пристрою. Офіційно позначено як безпечніший за SMS.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy and Security → Passkeys</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS (керування з будь-якого застосунку)</dd>
+            <dt>Захищає від</dt><dd>Ризиків, пов'язаних із SMS-кодом при вході.</dd>
+            <dt>Обмеження</dt><dd>Вхід за SMS-кодом усе одно лишається можливим; тримайте актуальний номер під контролем.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#q-what-is-a-passkey">telegram.org/faq</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Passcode Lock <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Код на сам застосунок з автоблокуванням.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy and Security → Passcode Lock</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop</dd>
+            <dt>Захищає від</dt><dd>Фізичного доступу до розблокованого телефона.</dd>
+            <dt>Обмеження</dt><dd>Не захищає від компрометованої ОС чи root-доступу.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#q-can-telegram-protect-me-against-everything">telegram.org/faq</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Devices / Active Sessions <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Список активних сесій; можна завершити чужі та ввімкнути автозавершення неактивних.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Devices</span> (або <span class="path">Privacy &amp; Security → Active Sessions</span>)</dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop / Web</dd>
+            <dt>Захищає від</dt><dd>Захоплення активної сесії; доступу зі старих чи чужих пристроїв.</dd>
+            <dt>Обмеження</dt><dd>Не завершує E2EE Secret Chats на партнерському пристрої автоматично.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#q-my-phone-was-stolen-what-do-i-do">telegram.org/faq</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Номер, автовидалення, приватність профілю <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Керування показом номера; автовидалення повідомлень; хто бачить last seen, фото, дзвінки тощо.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Privacy and Security → Phone Number</span>; <span class="path">→ Auto-Delete Messages</span>; <span class="path">→ Last Seen &amp; Online</span> та інші пункти цього ж розділу.</dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop</dd>
+            <dt>Захищає від</dt><dd>Розкриття номера, метаданих активності, небажаних контактів.</dd>
+            <dt>Обмеження</dt><dd>Автовидалення діє лише на повідомлення, надіслані після встановлення таймера.</dd>
+            <dt>Джерело</dt><dd><a href="https://telegram.org/faq#q-who-can-see-my-phone-number">telegram.org/faq</a></dd>
+          </dl>
+        </div>
+
+        <div class="callout c-not"><b>Що НЕ роблять налаштування Telegram.</b> Passcode Lock і 2-Step Verification не роблять звичайні хмарні чати наскрізно зашифрованими. Для вмісту, який не має бачити навіть Telegram, потрібні саме Secret Chats. Telegram не захистить від того, хто має фізичний або root-доступ до вашого пристрою.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 7 WHATSAPP -->
+  <section id="whatsapp" aria-labelledby="h-whatsapp">
+    <h2 id="h-whatsapp">7. WhatsApp</h2>
+    <p><strong>Модель шифрування (підтверджено).</strong> WhatsApp застосовує E2EE за замовчуванням до особистих повідомлень, дзвінків, медіа, голосових і групових чатів – окремо вмикати не треба. Окремий шар – резервна копія: за замовчуванням хмарний бекап <em>не</em> захищений E2EE, поки ви не увімкнете end-to-end encrypted backup (пароль або 64-значний ключ).</p>
+    <div class="callout c-warn"><b>Ключове.</b> Не плутайте захист самого чату із захистом резервної копії. Сам чат зашифровано завжди, а копія в хмарі – лише якщо ви увімкнули E2EE-бекап.</div>
+
+    <details class="app app-whatsapp" open>
+      <summary><span class="dot"></span> WhatsApp – ключові налаштування <span class="chev">›</span></summary>
+      <div class="inner">
+
+        <div class="card">
+          <h4><span class="dot"></span> Two-step verification <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>PIN, який вимагається при реєстрації номера на новому пристрої.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Account → Two-step verification → Turn on</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Захоплення акаунта: навіть при компрометації SMS-коду без PIN акаунт не викрадуть.</dd>
+            <dt>Обмеження</dt><dd>Не прибирає того, хто вже захопив акаунт. PIN не можна повідомляти нікому.</dd>
+            <dt>Джерело</dt><dd><a href="https://faq.whatsapp.com/1095301557782068/">faq.whatsapp.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> End-to-end encrypted backup <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Наскрізне шифрування резервної копії історії чатів у хмарі, захищене паролем або 64-значним ключем. За заявою WhatsApp, ані WhatsApp, ані провайдер хмари не можуть прочитати такий бекап.</dd>
+            <dt>Де</dt><dd><span class="path">Settings → Chats → Chat backup → End-to-end encrypted backup → Turn on</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Компрометації резервної копії в хмарі (Google Drive / iCloud).</dd>
+            <dt>Обмеження</dt><dd>Якщо забути пароль/ключ – доступ до бекапу втрачається. Не впливає на захист самого чату (він і так E2EE).</dd>
+            <dt>Джерело</dt><dd><a href="https://faq.whatsapp.com/490592613091019">faq.whatsapp.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> App lock та Chat lock <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>App lock – біометрія/пароль на вхід у WhatsApp. Chat lock – окремі чати ховаються за додатковим шаром автентифікації.</dd>
+            <dt>Де</dt><dd>App lock: <span class="path">Settings → Privacy → App lock</span>; Chat lock: у меню конкретного чату.</dd>
+            <dt>Платформа</dt><dd>Android / iOS (App lock на Web/Windows/Mac – пароль)</dd>
+            <dt>Захищає від</dt><dd>Фізичного доступу до розблокованого пристрою.</dd>
+            <dt>Обмеження</dt><dd>Не захищає від компрометованої ОС.</dd>
+            <dt>Джерело</dt><dd><a href="https://faq.whatsapp.com/1095301557782068/">faq.whatsapp.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Passkey та Strict account settings <span class="badge b-max">МАКСИМАЛЬНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Passkey прив'язує вхід до біометрії/екрана пристрою. Strict account settings – розширений режим, що застосовує найсуворіші правила приватності й безпеки для користувачів підвищеного ризику.</dd>
+            <dt>Де</dt><dd>Розділ безпеки акаунта (див. офіційну статтю «Account security tips»).</dd>
+            <dt>Платформа</dt><dd>За офіційною документацією; точний шлях залежить від версії.</dd>
+            <dt>Захищає від</dt><dd>Фішингу входу; підвищеної поверхні атак для цільових користувачів.</dd>
+            <dt>Обмеження</dt><dd>Strict settings призначені для тих, хто справді може бути ціллю; це не універсальна рекомендація «для всіх».</dd>
+            <dt>Джерело</dt><dd><a href="https://faq.whatsapp.com/1095301557782068/">faq.whatsapp.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Privacy: linked devices, disappearing messages, дзвінки, групи <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Керування пов'язаними пристроями; таймер зникання за замовчуванням; хто бачить last seen/online, фото профілю, About; хто додає в групи; приховання IP у дзвінках.</dd>
+            <dt>Де</dt><dd>Linked devices: <span class="path">⋮ → Linked devices</span>; решта: <span class="path">Settings → Privacy</span>; таймер: <span class="path">Settings → Privacy → Default message timer</span>; IP: <span class="path">Settings → Privacy → Advanced → Protect IP address in calls</span></dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Захоплення сесій, витоку метаданих активності, розкриття IP, небажаних контактів.</dd>
+            <dt>Обмеження</dt><dd>Метадані (хто, коли) не покриваються E2EE. «Protect IP» знижує якість дзвінка.</dd>
+            <dt>Джерело</dt><dd><a href="https://faq.whatsapp.com/820124435853543">faq.whatsapp.com (E2EE)</a></dd>
+          </dl>
+        </div>
+
+        <div class="callout c-not"><b>Що НЕ роблять налаштування WhatsApp.</b> E2EE чату не захищає незашифрований бекап – його треба вмикати окремо. App lock не захищає від компрометованої ОС. WhatsApp належить Meta, і метадані (з ким і коли ви спілкуєтесь) шифруванням вмісту не приховуються.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 8 VIBER -->
+  <section id="viber" aria-labelledby="h-viber">
+    <h2 id="h-viber">8. Viber</h2>
+    <p><strong>Модель шифрування (підтверджено).</strong> Viber застосовує E2EE за замовчуванням для приватних (1:1) і групових чатів та для 1:1 аудіо- й відеодзвінків; вмикати вручну не треба. За офіційною заявою, Viber не може читати ваші особисті та групові чати й прослуховувати 1:1 дзвінки. Сервери Viber при цьому бачать ваше ім'я, номер, дані пристрою та активності.</p>
+    <div class="callout c-warn"><b>Не підтверджено.</b> Щодо шифрування резервних копій Viber і статусу E2EE для «Спільнот» (Communities) зазначені офіційні джерела прямих даних не дають: <b>Немає підтверджених даних у зазначених джерелах.</b> Ці пункти варто перевіряти в актуальному довідковому центрі Viber.</div>
+
+    <details class="app app-viber" open>
+      <summary><span class="dot"></span> Viber – ключові налаштування <span class="chev">›</span></summary>
+      <div class="inner">
+
+        <div class="card">
+          <h4><span class="dot"></span> End-to-end encryption (за замовчуванням) <span class="badge b-ok">ПІДТВЕРДЖЕНО</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Наскрізне шифрування чатів, груп і 1:1 дзвінків, увімкнене автоматично (на основі протоколу Double Ratchet).</dd>
+            <dt>Де</dt><dd>Окремо вмикати не потрібно; наявність шифрування показує індикатор (замок/щит) у чаті.</dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop (потрібна версія 6.0+)</dd>
+            <dt>Захищає від</dt><dd>Перехоплення вмісту чатів і 1:1 дзвінків; доступу сервера до вмісту.</dd>
+            <dt>Обмеження</dt><dd>Не приховує метадані (номер, пристрій, активність), які бачить сервер. Статус E2EE для Communities не підтверджено.</dd>
+            <dt>Джерело</dt><dd><a href="https://help.viber.com/hc/en-us/articles/8909167863453-Understanding-end-to-end-encryption">help.viber.com</a>, <a href="https://www.viber.com/en/security/">viber.com/security</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> 2-step verification (PIN + email) <span class="badge b-base">БАЗОВИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>PIN, який вимагається при активації нового телефона чи зміні налаштувань акаунта; email використовується для скидання PIN.</dd>
+            <dt>Де</dt><dd><span class="path">More → Settings → Privacy</span> → 2-step verification (див. офіційну статтю «Set up 2-step verification»)</dd>
+            <dt>Платформа</dt><dd>Android / iOS</dd>
+            <dt>Захищає від</dt><dd>Захоплення акаунта при перенесенні на новий пристрій без вашого PIN.</dd>
+            <dt>Обмеження</dt><dd>Якщо забути PIN і втратити доступ до email – можлива втрата доступу до акаунта. PIN та email зберігаються на серверах Rakuten Viber.</dd>
+            <dt>Джерело</dt><dd><a href="https://help.viber.com/hc/en-us/articles/8860688199325-Set-up-2-step-verification">help.viber.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Trusted contacts (звірка E2EE) <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Список довірених контактів: ви вручну підтверджуєте, що з'єднання зашифроване. Зелений щит – підтверджено; червоний – ключ змінився (зміна пристрою або можлива MITM-атака).</dd>
+            <dt>Де</dt><dd>Екран Info контакту → перевірка ключа.</dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop</dd>
+            <dt>Захищає від</dt><dd>Man-in-the-middle: попереджає про зміну ключа шифрування.</dd>
+            <dt>Обмеження</dt><dd>Червоний щит не завжди атака – буває при зміні телефона контактом; потрібна перевірка вручну.</dd>
+            <dt>Джерело</dt><dd><a href="https://help.viber.com/hc/en-us/articles/9061180581661-Verify-end-to-end-encryption-trusted-contacts-list">help.viber.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h4><span class="dot"></span> Hidden Chats (PIN) та блокування Desktop <span class="badge b-plus">ПІДВИЩЕНИЙ</span></h4>
+          <dl class="grid">
+            <dt>Що це</dt><dd>Hidden Chats ховають окремі чати зі списку та закривають їх PIN-кодом. Desktop-версію можна заблокувати: екран чатів недоступний, сповіщення не показуються.</dd>
+            <dt>Де</dt><dd><span class="path">More → Settings → Privacy</span> → Hidden Chats; блокування – у налаштуваннях Viber Desktop.</dd>
+            <dt>Платформа</dt><dd>Android / iOS / Desktop</dd>
+            <dt>Захищає від</dt><dd>Підглядання при фізичному доступі до пристрою чи комп'ютера.</dd>
+            <dt>Обмеження</dt><dd>Не захищає від компрометованої ОС чи шкідливого Desktop-середовища.</dd>
+            <dt>Джерело</dt><dd><a href="https://help.viber.com/hc/en-us/articles/9046626798237-Protecting-your-privacy-on-Viber">help.viber.com</a></dd>
+          </dl>
+        </div>
+
+        <div class="callout c-not"><b>Що НЕ роблять налаштування Viber.</b> E2EE не приховує метадані, які бачить сервер (ім'я, номер, пристрій, активність). Блокування застосунку не захищає від компрометованої ОС. Щодо захисту резервних копій Viber немає підтверджених даних у зазначених джерелах – не вважайте бекап автоматично захищеним.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 9 PROFILES -->
+  <section id="profili" aria-labelledby="h-profili">
+    <h2 id="h-profili">9. Рівні (профілі) безпеки</h2>
+    <p>Замість поділу «звичайний / параноїк» використано три рівні. Кожен наступний додається до попереднього.</p>
+    <h3><span class="badge b-base">БАЗОВИЙ</span> Для звичайного користувача</h3>
+    <p>Мета: базовий захист акаунта, зниження спаму, захист профілю, контроль активних сесій, базовий захист пристрою. Це двоетапна перевірка / PIN, перевірка сесій, блокування застосунку та ОС.</p>
+    <h3><span class="badge b-plus">ПІДВИЩЕНИЙ</span> Для роботи з чутливою інформацією</h3>
+    <p>Мета: мінімізація розкриття персональних даних, посилений захист акаунта, обмеження пов'язаних пристроїв, автовидалення, посилене блокування застосунку, контроль резервних копій.</p>
+    <h3><span class="badge b-max">МАКСИМАЛЬНИЙ</span> Для підвищених вимог до конфіденційності</h3>
+    <p>Мета: мінімізація ідентифікаторів (username замість номера, sealed sender), суворий контроль сесій, мінімізація зберігання, додаткові механізми (relay calls, passkey), зниження ризику фізичного доступу, контроль бекапів і хмарного зберігання.</p>
+    <div class="callout c-info">Жоден профіль не обіцяє абсолютного захисту. Це зниження ризику, а не гарантія.</div>
+  </section>
+
+  <!-- 10 SCORING -->
+  <section id="ocinka" aria-labelledby="h-ocinka">
+    <h2 id="h-ocinka">10. Оцінка рівня контролю</h2>
+    <p>Шкала 1–5 (1 – мінімальний, 5 – високий рівень контролю користувача). Це орієнтовна оцінка на основі підтверджених функцій, а не офіційна характеристика розробника.</p>
+    <div class="table-scroll">
+    <table>
+      <caption>Оцінка за критеріями (1–5)</caption>
+      <thead><tr><th>Критерій</th><th class="th-signal">Signal</th><th class="th-telegram">Telegram</th><th class="th-whatsapp">WhatsApp</th><th class="th-viber">Viber</th></tr></thead>
+      <tbody>
+        <tr><td>Захист вмісту (E2EE)</td><td>5 – E2EE скрізь за замовчуванням</td><td>3 – E2EE лише в Secret Chats і дзвінках</td><td>5 – E2EE за замовчуванням</td><td>4 – E2EE чатів і 1:1 дзвінків</td></tr>
+        <tr><td>Захист акаунта</td><td>4 – PIN + Registration Lock</td><td>4 – 2-Step + Passkey</td><td>4 – 2SV + Passkey</td><td>3 – 2-step (PIN+email)</td></tr>
+        <tr><td>Контроль сесій</td><td>4</td><td>4 – Devices + автозавершення</td><td>4</td><td>3 – Desktop-сесії</td></tr>
+        <tr><td>Захист персональних даних</td><td>5 – приховання номера + username</td><td>4 – керування номером/профілем</td><td>3 – номер = логін</td><td>3 – керування статусами</td></tr>
+        <tr><td>Контроль резервних копій</td><td>4 – мінімум даних на сервері</td><td>2 – хмара доступна Telegram</td><td>4 – опційний E2EE-бекап</td><td>1 – немає підтверджених даних</td></tr>
+        <tr><td>Контроль метаданих</td><td>4 – sealed sender</td><td>2</td><td>2 – метадані до Meta</td><td>2 – сервер бачить активність</td></tr>
+        <tr><td>Контроль пристрою</td><td>4 – screen lock/security</td><td>3 – passcode lock</td><td>3 – app/chat lock</td><td>3 – блокування застосунку</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout c-warn"><b>Увага.</b> Оцінки суб'єктивні й наведені для порівняння. Вони не є офіційними характеристиками розробників.</div>
+  </section>
+
+  <!-- 11 -->
+  <section id="2fa" aria-labelledby="h-2fa">
+    <h2 id="h-2fa">11. 2FA та захист акаунтів</h2>
+    <p>Це найважливіший шар: без нього решта налаштувань другорядна.</p>
+    <ul>
+      <li><strong>Signal:</strong> Signal PIN + Registration Lock. Знижує ризик захоплення номера при SIM-swap. <a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">Джерело</a>.</li>
+      <li><strong>Telegram:</strong> 2-Step Verification (пароль) + опційно Passkey замість SMS. <a href="https://telegram.org/faq#q-how-does-2-step-verification-work">Джерело</a>.</li>
+      <li><strong>WhatsApp:</strong> Two-step verification (PIN) + Passkey. <a href="https://faq.whatsapp.com/1095301557782068/">Джерело</a>.</li>
+      <li><strong>Viber:</strong> 2-step verification (PIN + email для скидання). <a href="https://help.viber.com/hc/en-us/articles/8860688199325-Set-up-2-step-verification">Джерело</a>.</li>
+    </ul>
+    <div class="callout c-not"><b>Що НЕ роблять ці механізми.</b> Двоетапна перевірка не прибирає того, хто вже захопив акаунт, і не робить чат зашифрованим. Код/PIN/ключі не можна повідомляти нікому, навіть «підтримці».</div>
+  </section>
+
+  <!-- 12 -->
+  <section id="sesiyi" aria-labelledby="h-sesiyi">
+    <h2 id="h-sesiyi">12. Активні сесії та підключені пристрої</h2>
+    <p>Регулярно переглядайте, звідки виконано вхід, і видаляйте незнайоме.</p>
+    <ul>
+      <li><strong>Signal:</strong> <span class="path">Settings → Linked devices</span> – видаліть невживані.</li>
+      <li><strong>Telegram:</strong> <span class="path">Settings → Devices</span> – завершіть чужі сесії, увімкніть автозавершення неактивних. <a href="https://telegram.org/faq#q-my-phone-was-stolen-what-do-i-do">Джерело</a>.</li>
+      <li><strong>WhatsApp:</strong> <span class="path">⋮ → Linked devices</span> – вийдіть із незнайомих сесій.</li>
+      <li><strong>Viber:</strong> контроль і блокування Desktop-сесій у налаштуваннях. <a href="https://help.viber.com/hc/en-us/articles/9046626798237-Protecting-your-privacy-on-Viber">Джерело</a>.</li>
+    </ul>
+    <div class="callout c-not"><b>Що НЕ робить керування сесіями.</b> У Telegram завершення сесії не видаляє E2EE Secret Chats на пристрої співрозмовника – для цього потрібна дія «Clear History».</div>
+  </section>
+
+  <!-- 13 -->
+  <section id="backup" aria-labelledby="h-backup">
+    <h2 id="h-backup">13. Резервні копії</h2>
+    <p>Резервна копія має власну модель захисту, окрему від чату. Це найпоширеніша «діра».</p>
+    <ul>
+      <li><strong>WhatsApp:</strong> увімкніть <span class="path">Settings → Chats → Chat backup → End-to-end encrypted backup</span> (пароль або 64-значний ключ). Без цього хмарний бекап не захищено E2EE. <a href="https://faq.whatsapp.com/490592613091019">Джерело</a>.</li>
+      <li><strong>Telegram:</strong> роль «бекапу» виконує хмара – звичайні чати зберігаються на серверах Telegram, тобто доступні сервісу. Secret Chats у хмару не потрапляють. <a href="https://telegram.org/faq#secret-chats">Джерело</a>.</li>
+      <li><strong>Signal:</strong> Signal тримає мінімум даних на сервері; дані акаунта шифруються PIN. Локальні/резервні механізми залежать від платформи.</li>
+      <li><strong>Viber:</strong> <span class="badge b-nok">НЕ ПІДТВЕРДЖЕНО</span> Немає підтверджених даних у зазначених джерелах щодо шифрування резервних копій – перевіряйте в довідковому центрі Viber.</li>
+    </ul>
+    <div class="callout c-not"><b>Що НЕ гарантує бекап.</b> Незашифрована резервна копія може звести нанівець E2EE самого чату. Захист хмарного бекапу залежить також від безпеки вашого облікового запису Google/Apple.</div>
+  </section>
+
+  <!-- 14 -->
+  <section id="metadata" aria-labelledby="h-metadata">
+    <h2 id="h-metadata">14. Метадані</h2>
+    <p>Метадані – це хто, кому, коли, з якого пристрою. Здебільшого вони <em>не</em> покриваються E2EE.</p>
+    <ul>
+      <li><strong>Signal</strong> застосовує <em>sealed sender</em>, що ховає відправника від сервера для встановлених контактів, і зберігає мінімум метаданих. <a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">Джерело</a>.</li>
+      <li><strong>Telegram</strong> зберігає хмарні дані на розподіленій інфраструктурі; ключі розділені між юрисдикціями (за заявою Telegram). Вміст Secret Chats на сервері не зберігається. <a href="https://telegram.org/faq#q-do-you-process-data-requests">Джерело</a>.</li>
+      <li><strong>WhatsApp</strong>: вміст E2EE, але метадані доступні платформі (Meta).</li>
+      <li><strong>Viber</strong>: сервери бачать ім'я, номер, пристрій та активність (за офіційним описом приватності). <a href="https://help.viber.com/hc/en-us/articles/9046626798237-Protecting-your-privacy-on-Viber">Джерело</a>.</li>
+    </ul>
+  </section>
+
+  <!-- 15 -->
+  <section id="nevyrishuye" aria-labelledby="h-nevyrishuye">
+    <h2 id="h-nevyrishuye">15. Що налаштування месенджера не вирішують</h2>
+    <p>Ці ризики неможливо усунути налаштуваннями всередині застосунку. Вони потребують захисту пристрою, акаунта оператора чи дисципліни користувача.</p>
+    <ul>
+      <li>Уразливості ОС, spyware, malware, root/jailbreak.</li>
+      <li>Фізично скомпрометований пристрій; шкідливе Desktop-середовище.</li>
+      <li>Компрометація електронної пошти або акаунта оператора (SIM-swap).</li>
+      <li>Соціальна інженерія та фішинг.</li>
+      <li>Компрометація резервних копій.</li>
+      <li>Скриншоти та фотографування екрана іншим пристроєм.</li>
+      <li>Компрометація пристрою співрозмовника; витоки даних у контакта.</li>
+      <li>Помилки самого користувача (передача кодів, слабкі паролі).</li>
+    </ul>
+    <div class="callout c-warn"><b>Розподіл відповідальності.</b> Налаштування месенджера знижують ризики перехоплення, розкриття даних і захоплення акаунта. Захист від spyware, фізичного доступу й SIM-swap значною мірою лежить на рівні пристрою, оператора та поведінки користувача.</div>
+  </section>
+
+  <!-- 16 -->
+  <section id="konfiguraciyi" aria-labelledby="h-konfiguraciyi">
+    <h2 id="h-konfiguraciyi">16. Рекомендовані конфігурації</h2>
+    <h3><span class="badge b-base">БАЗОВИЙ</span></h3>
+    <ul>
+      <li>Увімкнути 2FA / двоетапну перевірку в кожному застосунку (Signal PIN+Registration Lock, Telegram 2-Step, WhatsApp 2SV, Viber 2-step).</li>
+      <li>Перевірити активні сесії й видалити незнайомі.</li>
+      <li>Увімкнути блокування застосунку та блокування ОС.</li>
+      <li>Обмежити, хто може додавати вас у групи й телефонувати.</li>
+    </ul>
+    <h3><span class="badge b-plus">ПІДВИЩЕНИЙ</span></h3>
+    <ul>
+      <li>Приховати номер (Signal: Nobody + username; Telegram: Phone Number).</li>
+      <li>Увімкнути автовидалення для нових чатів.</li>
+      <li>WhatsApp: увімкнути E2EE-бекап; Telegram: чутливе – лише в Secret Chats.</li>
+      <li>Обмежити пов'язані пристрої; налаштувати автозавершення сесій (Telegram).</li>
+    </ul>
+    <h3><span class="badge b-max">МАКСИМАЛЬНИЙ</span></h3>
+    <ul>
+      <li>Signal: sealed sender лише для контактів, relay calls, screen security, incognito keyboard.</li>
+      <li>Passkey замість SMS (Telegram, WhatsApp), де доступно.</li>
+      <li>Мінімум хмарного зберігання; свідомий контроль резервних копій.</li>
+      <li>Звірка ключів: Safety Number (Signal), Encryption Key (Telegram Secret Chats), Trusted Contacts (Viber).</li>
+    </ul>
+  </section>
+
+  <!-- 17 -->
+  <section id="checklist" aria-labelledby="h-checklist">
+    <h2 id="h-checklist">17. Фінальний checklist</h2>
+    <ul class="checklist">
+      <li><span class="box" aria-hidden="true"></span> Встановлено PIN / додатковий захист акаунта (2FA).</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено активні сесії.</li>
+      <li><span class="box" aria-hidden="true"></span> Видалено невідомі пристрої.</li>
+      <li><span class="box" aria-hidden="true"></span> Налаштовано блокування застосунку.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування номера телефону.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування профілю.</li>
+      <li><span class="box" aria-hidden="true"></span> Налаштовано автовидалення, якщо потрібно.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено резервні копії.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено захист резервних копій (E2EE-бекап у WhatsApp).</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування пов'язаних пристроїв.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування груп.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування дзвінків.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено сповіщення.</li>
+      <li><span class="box" aria-hidden="true"></span> Перевірено налаштування приватності.</li>
+      <li><span class="box" aria-hidden="true"></span> Оновлено застосунок і ОС.</li>
+    </ul>
+  </section>
+
+  <!-- 18 -->
+  <section id="dzherela" aria-labelledby="h-dzherela">
+    <h2 id="h-dzherela">18. Джерела (лише офіційна документація)</h2>
+    <h3>Signal</h3>
+    <ul class="src-list">
+      <li><a href="https://support.signal.org/hc/en-us/articles/9932632052378-How-to-protect-yourself-on-Signal">support.signal.org – How to protect yourself on Signal</a></li>
+      <li><a href="https://support.signal.org/hc/en-us/articles/6712070553754-Phone-Number-Privacy-and-Usernames">support.signal.org – Phone Number Privacy and Usernames</a></li>
+      <li><a href="https://support.signal.org/hc/en-us/articles/6829998083994-Phone-Number-Privacy-and-Usernames-Deeper-Dive">support.signal.org – Phone Number Privacy: Deeper Dive</a></li>
+      <li><a href="https://signal.org/blog/phone-number-privacy-usernames/">signal.org/blog – Usernames</a></li>
+    </ul>
+    <h3>Telegram</h3>
+    <ul class="src-list">
+      <li><a href="https://telegram.org/faq">telegram.org/faq</a> (укр. версія: <a href="https://telegram.org/faq?setln=uk">?setln=uk</a>)</li>
+      <li><a href="https://core.telegram.org/api/end-to-end">core.telegram.org/api/end-to-end</a></li>
+      <li><a href="https://core.telegram.org/techfaq">core.telegram.org/techfaq</a></li>
+      <li><a href="https://telegram.org/privacy">telegram.org/privacy</a></li>
+    </ul>
+    <h3>WhatsApp</h3>
+    <ul class="src-list">
+      <li><a href="https://faq.whatsapp.com/820124435853543">faq.whatsapp.com – About end-to-end encryption</a></li>
+      <li><a href="https://faq.whatsapp.com/490592613091019">faq.whatsapp.com – About end-to-end encrypted backup</a></li>
+      <li><a href="https://faq.whatsapp.com/1095301557782068/">faq.whatsapp.com – Account security tips</a></li>
+    </ul>
+    <h3>Viber</h3>
+    <ul class="src-list">
+      <li><a href="https://help.viber.com/hc/en-us/articles/8909167863453-Understanding-end-to-end-encryption">help.viber.com – Understanding end-to-end encryption</a></li>
+      <li><a href="https://help.viber.com/hc/en-us/articles/8860688199325-Set-up-2-step-verification">help.viber.com – Set up 2-step verification</a></li>
+      <li><a href="https://help.viber.com/hc/en-us/articles/9061180581661-Verify-end-to-end-encryption-trusted-contacts-list">help.viber.com – Trusted contacts list</a></li>
+      <li><a href="https://help.viber.com/hc/en-us/articles/9046626798237-Protecting-your-privacy-on-Viber">help.viber.com – Protecting your privacy on Viber</a></li>
+      <li><a href="https://www.viber.com/en/security/">viber.com/en/security</a></li>
+    </ul>
+    <h3>Допоміжні локальні матеріали (навігація)</h3>
+    <p>Шляхи меню для Signal, Telegram і WhatsApp додатково звірено з локальним каталогом <span class="path">privacy-settings-main/Privacy Settings</span> (стороннє джерело навігації, надане користувачем). Файлу Viber у каталозі немає, тож Viber описано лише за офіційними джерелами.</p>
+
+    <div class="callout c-info" id="dzherela-note">
+      <strong>Про розбіжності.</strong> Офіційна документація Telegram сама зазначає, що може містити застарілі місця через постійні оновлення; де точний шлях залежить від версії, це позначено в тексті. Суперечностей між офіційними сторінками щодо ключових фактів (модель шифрування, 2FA, сесії, бекапи) під час перевірки не виявлено.
+    </div>
+  </section>
+
+  <!-- 19 -->
+  <section id="perevirka" aria-labelledby="h-perevirka">
+    <h2 id="h-perevirka">19. Дата перевірки документації</h2>
+    <p><strong>Джерела перевірено:</strong> 13 серпня 2026 року.</p>
+    <p><strong>Метод:</strong> факти про шифрування, 2FA/PIN, сесії, резервні копії та приватність узято безпосередньо з офіційних доменів розробників (signal.org / support.signal.org, telegram.org / core.telegram.org, faq.whatsapp.com, help.viber.com / viber.com). Дані, не підтверджені цими джерелами, позначено як «Немає підтверджених даних у зазначених джерелах» і не подано як факт.</p>
+    <p><strong>Обмеження документа:</strong> це практичний довідник, а не гарантія безпеки. Він знижує ризики, але не забезпечує абсолютного захисту. Перед застосуванням звіряйте точні пункти меню з актуальною версією застосунку.</p>
+  </section>
+
+  <footer>
+    Практичний security &amp; privacy довідник • версія 1.0 • створено та перевірено 13 серпня 2026 • мова: українська<br>
+    Терміни інтерфейсу подано в оригіналі, як у офіційних джерелах. Документ не є офіційною публікацією розробників месенджерів.
+  </footer>
+
+</main>
+</div>
+</body>
+</html>
