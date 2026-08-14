@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Ежедневный отчёт Cyber Threat Intelligence — 14.08.2026</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121a2b; --panel2:#0f1728; --text:#e6ecf5; --muted:#9fb0c9;
+    --crit:#ff4d4f; --high:#ff9f43; --med:#ffd166; --low:#52c41a; --accent:#3fa9f5; --border:#243352;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;line-height:1.55;margin:0;padding:0;}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px;}
+  header.top{border-bottom:2px solid var(--accent);padding-bottom:18px;margin-bottom:28px;}
+  header.top h1{font-size:28px;margin:0 0 6px;}
+  header.top .meta{color:var(--muted);font-size:14px;}
+  h2{font-size:22px;color:var(--accent);border-left:4px solid var(--accent);padding-left:10px;margin-top:48px;}
+  h3{font-size:18px;color:#cfe3ff;margin-top:28px;}
+  h4{font-size:15px;color:var(--text);margin-top:18px;margin-bottom:6px;}
+  p{margin:8px 0;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:16px 0;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;background:var(--panel2);border-radius:8px;overflow:hidden;}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#1a2740;color:#cfe3ff;font-weight:600;}
+  tr:nth-child(even) td{background:#101a2e;}
+  .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#0b1220;}
+  .badge.critical{background:var(--crit);color:#fff;}
+  .badge.high{background:var(--high);}
+  .badge.medium{background:var(--med);}
+  .badge.low{background:var(--low);}
+  .tag{display:inline-block;background:#1e2c47;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:1px 8px;font-size:11.5px;margin-right:4px;}
+  .prelim{color:var(--med);font-weight:600;}
+  .toc{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 22px;}
+  .toc a{display:block;padding:3px 0;color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .exec-top5{counter-reset:item;}
+  .exec-top5 li{margin-bottom:10px;}
+  code{background:#1a2740;padding:1px 6px;border-radius:4px;font-size:13px;}
+  ul{margin:6px 0;padding-left:22px;}
+  .src-list{font-size:13px;color:var(--muted);}
+  .src-list li{margin-bottom:4px;}
+  .risk-summary{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0;}
+  .risk-box{flex:1;min-width:140px;border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border);}
+  .risk-box .n{font-size:26px;font-weight:800;}
+  .risk-box.c{background:rgba(255,77,79,.12);}
+  .risk-box.h{background:rgba(255,159,67,.12);}
+  .risk-box.m{background:rgba(255,209,102,.12);}
+  .risk-box.l{background:rgba(82,196,26,.12);}
+  footer{margin-top:60px;border-top:1px solid var(--border);padding-top:16px;color:var(--muted);font-size:12px;}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>🛡️ Ежедневный отчёт Cyber Threat Intelligence</h1>
+  <div class="meta">Отчётный период: 13–14 августа 2026 · Подготовлено: автоматизированный CTI/SOC-анализ · Дата генерации: 14.08.2026</div>
+</header>
+
+<div class="toc">
+  <strong>Содержание</strong>
+  <a href="#exec">1. Executive Summary</a>
+  <a href="#windows">2. Windows</a>
+  <a href="#cisco">3. Cisco</a>
+  <a href="#wordpress">4. WordPress</a>
+  <a href="#joomla">5. Joomla</a>
+  <a href="#apple">6. Apple</a>
+  <a href="#messengers">7. Мессенджеры (Telegram / WhatsApp / Signal / Viber)</a>
+  <a href="#vulns">8. Новые уязвимости (сводная таблица CVE)</a>
+  <a href="#attacks">9. Кибератаки</a>
+  <a href="#ioc">10. IOC</a>
+  <a href="#breaches">11. Утечки данных и киберинциденты</a>
+  <a href="#impact">12. Business Impact</a>
+  <a href="#sources">13. Источники</a>
+</div>
+
+<!-- ================= EXEC SUMMARY ================= -->
+<h2 id="exec">1. Executive Summary</h2>
+<div class="card">
+<p>Отчётный период характеризуется публикацией крупнейшего в 2026 году набора обновлений Microsoft Patch Tuesday (398–421 CVE, по разным подсчётам вендоров), активной эксплуатацией нескольких критических уязвимостей «нулевого дня» (Windows AFD.sys, Metabase, VMware vCenter), продолжающейся кампанией DeadLock с блокчейн-инфраструктурой C2, а также фишинговыми кампаниями северокорейских (Operation Dream Job) и российских (Sandworm/UAC-0145) государственных группировок, использующих фейковые предложения о трудоустройстве.</p>
+
+<h3>Топ-5 критических событий дня</h3>
+<ol class="exec-top5">
+<li><span class="badge critical">CRITICAL</span> <strong>Microsoft Patch Tuesday, август 2026</strong> — устранено 398 CVE (42 критических), включая активно эксплуатируемый 0-day <code>CVE-2026-68820</code> (Windows AFD.sys, EoP) и критические RCE <code>CVE-2026-62815</code> (MS QUIC, CVSS 9.8), <code>CVE-2026-62893</code> (Windows Deployment Services, CVSS 9.8), <code>CVE-2026-62878</code> (Windows DNS Server, CVSS 9.8).</li>
+<li><span class="badge critical">CRITICAL</span> <strong>Metabase — unauthenticated SQL Injection 0-day</strong> (<code>CVE-2026-72898</code>, CVSS 10.0) — активно эксплуатируется в дикой природе для получения полного административного доступа; добавлена в CISA KEV со сроком устранения для федеральных агентств США до 14.08.2026.</li>
+<li><span class="badge critical">CRITICAL</span> <strong>VMware vCenter — Directory Traversal</strong> (<code>CVE-2026-59310</code>, CVSS 9.8) — глобальная кампания эксплуатации, зафиксировано 361 IP-адрес жертв в 47 странах; используется для развёртывания reverse SSH и закрепления через вредоносные cron-задания.</li>
+<li><span class="badge high">HIGH</span> <strong>DeadLock Ransomware</strong> — устойчивая к блокировке инфраструктура на блокчейне Polygon и сети Session; свыше 80 жертв (преимущественно в Европе: IT, добывающая промышленность, транспорт, производство).</li>
+<li><span class="badge high">HIGH</span> <strong>Государственные фишинговые кампании под видом трудоустройства</strong> — Sandworm/UAC-0145 (трояны WireGuard/SopraVPN против украинских системных администраторов) и северокорейская Operation Dream Job (фейковые вакансии Lockheed Martin/Enveil), эксплуатирующая, среди прочего, <code>CVE-2026-68820</code>.</li>
+</ol>
+
+<h3>Наиболее активно эксплуатируемые CVE</h3>
+<table>
+<tr><th>CVE</th><th>Продукт</th><th>CVSS</th><th>Статус эксплуатации</th></tr>
+<tr><td>CVE-2026-72898</td><td>Metabase</td><td>10.0</td><td>Активная эксплуатация, в CISA KEV</td></tr>
+<tr><td>CVE-2026-59310</td><td>VMware vCenter (Syslog server)</td><td>9.8</td><td>Активная эксплуатация, 361 IP / 47 стран</td></tr>
+<tr><td>CVE-2026-68820</td><td>Windows AFD.sys (WinSock)</td><td>7.0</td><td>Активная эксплуатация (0-day до патча), используется в Operation Dream Job</td></tr>
+<tr><td>CVE-2026-48907</td><td>Joomla JCE (Content Editor)</td><td>10.0</td><td>Активная эксплуатация, в CISA KEV (фон, июнь 2026, сохраняет актуальность)</td></tr>
+<tr><td>CVE-2026-56290 / CVE-2026-48908</td><td>Joomla Page Builder / Page Builder CK</td><td>10.0</td><td>В CISA KEV (фон, июнь 2026)</td></tr>
+</table>
+
+<h3>Главные кампании злоумышленников</h3>
+<ul>
+<li><strong>DeadLock</strong> (финансово мотивированная, RaaS) — Rust-энкодер, C2 через смарт-контракты Polygon, чат с жертвами через Session, эксфильтрация на Wasabi Cloud.</li>
+<li><strong>Sandworm / UAC-0145</strong> (state-sponsored, РФ, связана с GRU) — фейковый рекрутер «Atlas Business Group», интервью в Zoom, троянизированный клиент WireGuard «SopraVPN», доставка PowerShell-полезной нагрузки украинским системным администраторам.</li>
+<li><strong>Operation Dream Job</strong> (state-sponsored, KND) — фейковые вакансии от имени Lockheed Martin и Enveil, кража данных и установка вредоносного ПО, использование <code>CVE-2026-68820</code>.</li>
+<li><strong>BdThemes Supply Chain Attack</strong — компрометация JSON-фида, XSS в 7 плагинах WordPress, создание rogue admin-аккаунтов и веб-шеллов без обновления плагинов.</li>
+<li><strong>QUIRSO-кластер</strong эксплуатации VMware vCenter — атакующая инфраструктура начала контакт с жертвами через 5 дней после публикации бюллетеня Broadcom VMSA-2026-0006.</li>
+</ul>
+
+<h3>Рекомендации</h3>
+<h4>Для SOC</h4>
+<ul>
+<li>Настроить детектирование попыток эксплуатации <code>CVE-2026-68820</code> (аномальные вызовы afd.sys, повышение привилегий до SYSTEM), <code>CVE-2026-72898</code> (нетипичные запросы к <code>/api/session/reset_password</code>) и <code>CVE-2026-59310</code> (path traversal к Syslog vCenter, появление reverse_ssh, подозрительные cron-задания).</li>
+<li>Мониторить исходящие соединения к инфраструктуре Polygon/Session, характерные для DeadLock.</li>
+<li>Расширить правила фишинг-детектирования на сценарии «фейковый рекрутер → Telegram/Zoom → запрос установки VPN-клиента».</li>
+</ul>
+<h4>Для Blue Team</h4>
+<ul>
+<li>Провести threat hunting на предмет закрепления через reverse_ssh и нетипичные cron-задания на серверах vCenter.</li>
+<li>Проверить журналы Metabase на признаки несанкционированного сброса паролей и создания новых admin-аккаунтов.</li>
+<li>Аудит установленных VPN-клиентов на рабочих станциях ИТ-персонала (в т.ч. неофициальные сборки WireGuard).</li>
+</ul>
+<h4>Для Vulnerability Management</h4>
+<ul>
+<li>Приоритет 1 (24–48 часов): Metabase (CVE-2026-72898), VMware vCenter (CVE-2026-59310), Windows AFD.sys (CVE-2026-68820).</li>
+<li>Приоритет 2 (7 дней): остальные критические Windows CVE из Patch Tuesday (MS QUIC, WDS, DNS Server), критические advisories Cisco Catalyst SD-WAN и IOS XE от 05.08.2026.</li>
+<li>Обеспечить включение всех новых записей CISA KEV в цикл патч-менеджмента с SLA ≤ 48 часов для федеральных/критичных систем.</li>
+</ul>
+<h4>Администраторам Windows</h4>
+<ul>
+<li>Немедленно установить кумулятивные обновления августа 2026 (KB5121003 / KB5120240 для Windows 11; KB5120249 для Windows 10 ESU).</li>
+<li>Отдельное внимание — серверам с ролями DNS Server и Deployment Services (критические RCE с CVSS 9.8).</li>
+<li>Учитывать публикацию эксплойта «ShieldBreak» для Microsoft Defender, выпущенного вскоре после Patch Tuesday.</li>
+</ul>
+<h4>Администраторам Cisco</h4>
+<ul>
+<li>Применить обновления от 05.08.2026 для Catalyst SD-WAN (CVSS 9.9) и IOS XE (CVSS 9.8) в приоритетном порядке.</li>
+<li>Подготовиться к очередному пакету advisories, запланированному на 19.08.2026 (BroadWorks, промышленные коммутаторы, RoomOS, Secure Firewall).</li>
+</ul>
+<h4>Администраторам WordPress</h4>
+<ul>
+<li>Проверить используются ли плагины BdThemes — семь плагинов временно сняты с публикации в каталоге WordPress.org; при обнаружении признаков компрометации — полный форензический аудит, ротация ключей и инвалидация сессий.</li>
+<li>Обновить Ajax Search Lite до версии 4.14.5+ (CVE-2026-28139, CVSS 9.8, unauthenticated PHP Object Injection).</li>
+</ul>
+
+<h3>Общий рейтинг рисков дня</h3>
+<div class="risk-summary">
+  <div class="risk-box c"><div class="n">3</div>Critical</div>
+  <div class="risk-box h"><div class="n">4</div>High</div>
+  <div class="risk-box m"><div class="n">2</div>Medium</div>
+  <div class="risk-box l"><div class="n">0</div>Low</div>
+</div>
+<p class="note">Итоговый рейтинг риска за период: <strong>CRITICAL</strong> — обусловлен активной эксплуатацией трёх уязвимостей с CVSS ≥ 9.5 (Metabase, VMware vCenter, косвенно Windows AFD.sys) на фоне продолжающихся государственных фишинговых кампаний.</p>
+</div>
+
+<!-- ================= WINDOWS ================= -->
+<h2 id="windows">2. Windows</h2>
+<div class="card">
+<h3>Microsoft Patch Tuesday — август 2026</h3>
+<p><strong>Дата публикации:</strong> 11.08.2026 &nbsp;|&nbsp; <strong>Источники:</strong> SecurityWeek, Qualys, Tenable, CrowdStrike, cybersecuritynews.com, ZDI, Talos, Krebs on Security, The Hacker News</p>
+<p><strong>Краткое описание:</strong> Microsoft выпустила крупнейший в 2026 году пакет обновлений безопасности, устранив от 394 до 421 CVE (данные источников расходятся — отмечено как расхождение) — 42–62 из них критические. Один 0-day активно эксплуатировался до выпуска патча.</p>
+<p class="note">⚠️ Противоречие в данных: количество устранённых CVE варьируется по источникам (Tenable/SecurityWeek — 398/421; cybersecuritynews.com — 394; ZDI/Talos учитывают дополнительные сторонние advisories). Krebs on Security связывает рост числа находок с использованием ИИ в процессе поиска уязвимостей внутри Microsoft.</p>
+<p><strong>Технические детали:</strong></p>
+<ul>
+<li><code>CVE-2026-68820</code> — use-after-free в Windows Ancillary Function Driver for WinSock (afd.sys), эксплуатируется для повышения привилегий до SYSTEM. Активно эксплуатируется в атаках (в т.ч. Operation Dream Job).</li>
+<li><code>CVE-2026-62815</code> — критическая RCE в Microsoft QUIC, CVSS 9.8, эксплуатация без аутентификации и без взаимодействия пользователя.</li>
+<li><code>CVE-2026-62893</code> — критическая RCE в Windows Deployment Services, CVSS 9.8.</li>
+<li><code>CVE-2026-62878</code> — критическая RCE в Windows DNS Server, CVSS 9.8.</li>
+<li><code>CVE-2026-62832</code> — EoP в Windows User Profile Service, CVSS 7.8, локальный вектор, получение прав ADMINISTRATOR.</li>
+<li><code>CVE-2026-62696</code> — EoP в Windows Program Compatibility Assistant Service, получение SYSTEM.</li>
+<li><code>CVE-2026-72971</code> — tampering в Windows Container Isolation FS Filter Driver (unionfs.sys), CVSS 5.5.</li>
+</ul>
+<p><strong>Затронутые версии:</strong> Windows 10 (ESU), Windows 11 23H2/24H2/25H2, Windows Server (актуальные поддерживаемые версии).</p>
+<p><strong>PoC:</strong> не подтверждён публично на момент отчёта &nbsp;|&nbsp; <strong>Эксплойт:</strong> да, для CVE-2026-68820 (in-the-wild) &nbsp;|&nbsp; <strong>Активная эксплуатация:</strong> да (CVE-2026-68820)</p>
+<p><strong>MITRE ATT&CK:</strong> T1068 (Exploitation for Privilege Escalation), T1210 (Exploitation of Remote Services)</p>
+<p><strong>CVSS:</strong> 5.5–9.8 (по отдельным CVE) &nbsp;|&nbsp; <strong>CWE:</strong> CWE-416 (Use After Free), CWE-284 (Improper Access Control)</p>
+<p><strong>Официальные рекомендации:</strong> <a href="https://msrc.microsoft.com/update-guide/" target="_blank">MSRC Update Guide</a>, <a href="https://www.securityweek.com/august-2026-patch-tuesday-microsoft-fixes-421-cves-one-exploited-zero-day/" target="_blank">SecurityWeek</a>, <a href="https://thehackernews.com/2026/08/microsoft-patches-398-flaws-including.html" target="_blank">The Hacker News</a></p>
+
+<h3>Microsoft Defender — эксплойт «ShieldBreak»</h3>
+<p><strong>Дата публикации:</strong> ~13.08.2026 (после Patch Tuesday) &nbsp;|&nbsp; <strong>Источник:</strong> BleepingComputer &nbsp;|&nbsp; <span class="prelim">Предварительная информация</span></p>
+<p><strong>Краткое описание:</strong> Группа «Nightmare Eclipse» опубликовала эксплойт, названный «ShieldBreak», нацеленный на Microsoft Defender, вскоре после выхода августовских патчей. Детали (конкретный CVE, вектор, PoC-код) на момент подготовки отчёта не подтверждены официально Microsoft — требуется дополнительная верификация.</p>
+<p><strong>Затронутые версии:</strong> не уточнено &nbsp;|&nbsp; <strong>PoC:</strong> заявлен публикатором, независимого подтверждения нет &nbsp;|&nbsp; <strong>Активная эксплуатация:</strong> не подтверждена</p>
+</div>
+
+<!-- ================= CISCO ================= -->
+<h2 id="cisco">3. Cisco</h2>
+<div class="card">
+<h3>Cisco Security Advisories — 5 августа 2026</h3>
+<p><strong>Дата публикации:</strong> 05.08.2026 &nbsp;|&nbsp; <strong>Источник:</strong> Cisco PSIRT (sec.cloudapps.cisco.com)</p>
+<p><strong>Краткое описание:</strong> Cisco опубликовала пакет advisories, крупнейшие затрагивают Catalyst SD-WAN Software и IOS XE Software. Уязвимости выявлены в ходе внутреннего тестирования; на момент публикации не зафиксировано активной эксплуатации в дикой природе.</p>
+<table>
+<tr><th>CVE</th><th>Продукт</th><th>CVSS</th><th>Severity</th></tr>
+<tr><td>CVE-2026-20303, -20304, -20310, -20312, -20313</td><td>Cisco Catalyst SD-WAN Software</td><td>9.9</td><td>Critical</td></tr>
+<tr><td>CVE-2026-20267 … 20273 (7 CVE)</td><td>Cisco IOS XE Software</td><td>9.8</td><td>Critical</td></tr>
+<tr><td>CVE-2026-20200, CVE-2026-20288</td><td>Cisco Integrated Management Controller (argument injection)</td><td>8.8</td><td>High</td></tr>
+<tr><td>CVE-2026-20301</td><td>IOS / IOS XE, XMPP client DoS</td><td>8.6</td><td>High</td></tr>
+<tr><td>CVE-2026-20263</td><td>IOS XE, BEEP DoS</td><td>8.6</td><td>High</td></tr>
+<tr><td>CVE-2026-20124</td><td>IOS XE, SNMP DoS</td><td>7.7</td><td>High</td></tr>
+</table>
+<p><strong>Наличие PoC / эксплойта:</strong> не выявлено &nbsp;|&nbsp; <strong>Активная эксплуатация:</strong> нет (по данным Cisco)</p>
+<p><strong>Официальные рекомендации:</strong> <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-L4XfJg8S" target="_blank">Cisco Advance Notification (05.08.2026)</a></p>
+<p class="note">Следующий пакет advisories запланирован на 19.08.2026 (BroadWorks, промышленные Ethernet-коммутаторы, contact center software, RoomOS, Secure Firewall) — вне 24-часового окна отчёта, указано для контекста планирования патч-менеджмента.</p>
+</div>
+
+<!-- ================= WORDPRESS ================= -->
+<h2 id="wordpress">4. WordPress</h2>
+<div class="card">
+<h3>BdThemes — атака на цепочку поставок (Supply Chain)</h3>
+<p><strong>Дата публикации:</strong> ~08.08.2026 (плагины закрыты в каталоге 07–08.08.2026) &nbsp;|&nbsp; <strong>Источник:</strong> The Hacker News, Wordfence</p>
+<p><strong>Краткое описание:</strong> Скомпрометированный JSON-фид BdThemes использован для эксплуатации XSS-уязвимостей в семи плагинах WordPress, что приводило к созданию поддельных административных учётных записей и установке PHP web shell без необходимости обновления самих плагинов.</p>
+<p><strong>Технические детали:</strong> Вредоносный контент доставлялся через удалённый JSON-фид, используемый плагинами для обновления динамических данных (шаблоны, уведомления); инъекция XSS-payload приводила к выполнению административных действий в контексте залогиненного администратора.</p>
+<p><strong>Затронутые версии:</strong> семь плагинов BdThemes (сняты с публикации в каталоге WordPress.org на период «полной проверки»)</p>
+<p><strong>PoC:</strong> не публиковался &nbsp;|&nbsp; <strong>Эксплойт:</strong> да, в дикой природе &nbsp;|&nbsp; <strong>Активная эксплуатация:</strong> да</p>
+<p><strong>MITRE ATT&CK:</strong> T1195.002 (Supply Chain Compromise: Software Supply Chain), T1059.007 (XSS/JS execution)</p>
+<p><strong>Официальные рекомендации:</strong> <a href="https://thehackernews.com/2026/08/bdthemes-supply-chain-attack-poisons.html" target="_blank">The Hacker News</a></p>
+
+<h3>Критический бэкдор в плагине WordPress (20 000+ сайтов)</h3>
+<p><strong>Дата публикации:</strong> конец июля / начало августа 2026 (Wordfence firewall для premium — 28.07.2026, для free-tier — 27.08.2026) &nbsp;|&nbsp; <strong>Источник:</strong> GBHackers, Wordfence</p>
+<p><strong>Краткое описание:</strong> Обнаружен бэкдор в популярном плагине, позволяющий полный захват учётной записи администратора. Вредоносная версия распространялась ограниченно, однако все сайты с уязвимой версией плагина следует считать потенциально скомпрометированными.</p>
+<p><strong>Наличие PoC:</strong> нет данных &nbsp;|&nbsp; <strong>Активная эксплуатация:</strong> подтверждена ограниченно</p>
+<p><strong>Mitigation:</strong> немедленное удаление плагина, аудит всех учётных записей, ротация ключей аутентификации, инвалидация сессий, полный форензический анализ.</p>
+
+<h3>Ajax Search Lite — Unauthenticated PHP Object Injection</h3>
+<p><strong>CVE:</strong> CVE-2026-28139 &nbsp;|&nbsp; <strong>CVSS:</strong> 9.8 (Critical) &nbsp;|&nbsp; <strong>Источник:</strong> Patchstack</p>
+<p><strong>Затронутые версии:</strong> до 4.14.4 включительно &nbsp;|&nbsp; <strong>Патч:</strong> 4.14.5</p>
+<p><strong>Описание:</strong> Неаутентифицированная PHP Object Injection, потенциально ведущая к RCE через цепочки POP-гаджетов при наличии подходящих зависимостей на сайте.</p>
+<p><strong>Mitigation:</strong> обновление до версии 4.14.5 или выше в приоритетном порядке.</p>
+</div>
+
+<!-- ================= JOOMLA ================= -->
+<h2 id="joomla">5. Joomla</h2>
+<div class="card">
+<p class="note">За последние 24 часа новых Joomla-специфичных публикаций не зафиксировано. Ниже приведён контекст ранее раскрытых, но остающихся высококритичными и активно эксплуатируемых уязвимостей (июнь 2026), сохраняющих актуальность для приоритизации патч-менеджмента.</p>
+<h3>CVE-2026-48907 — Joomla Content Editor (JCE), Unauthenticated RCE</h3>
+<p><strong>CVSS:</strong> 10.0 (Critical) &nbsp;|&nbsp; <strong>Затронутые версии:</strong> JCE 1.0.0 – 2.9.99.4 &nbsp;|&nbsp; <strong>Патч:</strong> 2.9.99.5 (03.06.2026)</p>
+<p><strong>Описание:</strong> Позволяет создавать поддельные профили редактора без аутентификации и злоупотреблять функцией импорта профиля для загрузки и выполнения произвольного PHP-кода.</p>
+<p><strong>Известная эксплуатация:</strong> да — добавлена в CISA KEV 16.06.2026, зафиксировано автоматизированное сканирование ~2.5 млн активных сайтов Joomla по всему миру.</p>
+<p><strong>Официальные рекомендации:</strong> <a href="https://developer.joomla.org/security-centre.html" target="_blank">Joomla Security Centre</a>, <a href="https://thehackernews.com/2026/06/cisa-warns-of-actively-exploited-joomla.html" target="_blank">The Hacker News</a></p>
+
+<h3>CVE-2026-56290 / CVE-2026-48908 — Joomla Page Builder / Page Builder CK</h3>
+<p><strong>CVSS:</strong> 10.0 (Critical) для обеих &nbsp;|&nbsp; <strong>Описание:</strong> неаутентифицированная загрузка произвольных файлов из-за недостаточного контроля доступа, ведущая к RCE. Обе добавлены в CISA KEV.</p>
+
+<h3>CVE-2026-48904 — Joomla Privilege Escalation</h3>
+<p><strong>Описание:</strong> Некорректная проверка прав доступа в endpoint <code>com_users</code> (group editing web service), позволяющая повышение привилегий.</p>
+</div>
+
+<!-- ================= APPLE ================= -->
+<h2 id="apple">6. Apple</h2>
+<div class="card">
+<h3>macOS — обход аутентификации Screen Sharing</h3>
+<p><strong>CVE:</strong> CVE-2026-65400 &nbsp;|&nbsp; <strong>Дата публикации:</strong> начало августа 2026 (незадолго до окна отчёта) &nbsp;|&nbsp; <strong>Источник:</strong> Apple Support, Inc.com, Malwarebytes</p>
+<p><strong>Краткое описание:</strong> Уязвимость в Screen Sharing, позволяющая злоумышленнику «в сети» пройти аутентификацию без действительных учётных данных.</p>
+<p><strong>Затронутые версии/патчи:</strong> исправлено в macOS Tahoe 26.6.1, macOS Sequoia 15.7.9, macOS Sonoma 14.8.9.</p>
+<p><strong>Кто обнаружил:</strong> Alfredo Pesoli (Bynario)</p>
+<p><strong>Активная эксплуатация:</strong> Apple заявляет об отсутствии подтверждённой эксплуатации за пределами тестовых сред.</p>
+<p><strong>Official Advisory:</strong> <a href="https://support.apple.com/en-us/100100" target="_blank">Apple Security Releases</a></p>
+<p class="note">За последние 24 часа новых Apple-специфичных security bulletin не зафиксировано; ближайший плановый цикл — iOS/macOS 26.2 (security content опубликован ранее, см. support.apple.com/en-us/125884, /125886, /125892).</p>
+</div>
+
+<!-- ================= MESSENGERS ================= -->
+<h2 id="messengers">7. Мессенджеры: Telegram / Viber / WhatsApp / Signal</h2>
+<div class="card">
+<p class="note">За отчётный период (24 часа) новых CVE или официальных security-бюллетеней для Telegram, Viber, WhatsApp или Signal не зафиксировано. Ниже — актуальный фоновый контекст по исследовательским находкам, релевантным для оценки риска пользователей корпоративных коммуникаций.</p>
+
+<h3>«Careless Whisper» — атака по таймингу delivery receipts</h3>
+<p><strong>Источник:</strong> University of Vienna / SBA Research (RAID 2025 Best Paper) &nbsp;|&nbsp; <span class="prelim">Предварительная информация / академическое исследование</span></p>
+<p><strong>Описание:</strong> Уязвимость на уровне протокола, связанная с анализом времени доставки receipt-подтверждений, потенциально позволяющая деанонимизировать/отслеживать пользователей.</p>
+<p><strong>Статус по платформам:</strong> Signal — частичная митигация через rate limiting (декабрь 2025); WhatsApp — уязвимость признана, значимых контрмер по состоянию на январь 2026 не внедрено.</p>
+
+<h3>Contact Discovery Vulnerability (WhatsApp)</h3>
+<p><strong>Источник:</strong> NDSS 2026 &nbsp;|&nbsp; <strong>Описание:</strong> Позволяет энумерацию учётных записей примерно для 3.5 млрд пользователей WhatsApp через функцию обнаружения контактов.</p>
+
+<h3>Sandworm/UAC-0145 — использование Telegram как канала социальной инженерии</h3>
+<p>См. подробности в разделе «Кибератаки» ниже — Telegram использовался не как объект уязвимости, а как канал доставки в фишинговой кампании против IT-специалистов.</p>
+</div>
+
+<!-- ================= NEW VULNS TABLE ================= -->
+<h2 id="vulns">8. Раздел «Новые уязвимости»</h2>
+<div class="card">
+<table>
+<tr>
+<th>CVE</th><th>Название</th><th>Vendor</th><th>CVSS</th><th>Severity</th><th>Affected Versions</th><th>Attack Vector</th><th>Auth Required</th><th>PoC</th><th>Known Exploited</th><th>Patch</th>
+</tr>
+<tr><td>CVE-2026-72898</td><td>Metabase unauthenticated SQL Injection</td><td>Metabase</td><td>10.0</td><td>Critical</td><td>≥ 1.58</td><td>Network</td><td>Нет</td><td>Да (in-the-wild)</td><td>Да (CISA KEV)</td><td>63.5, 62.9, 61.11, 60.17, 59.21, 58.24</td></tr>
+<tr><td>CVE-2026-59310</td><td>VMware vCenter Syslog Directory Traversal → RCE</td><td>Broadcom/VMware</td><td>9.8</td><td>Critical</td><td>vCenter (см. VMSA-2026-0006)</td><td>Network</td><td>Нет</td><td>Да (in-the-wild)</td><td>Да</td><td>См. VMSA-2026-0006</td></tr>
+<tr><td>CVE-2026-68820</td><td>Windows AFD.sys Use-After-Free EoP</td><td>Microsoft</td><td>7.0</td><td>High</td><td>Windows 10/11, Server</td><td>Local</td><td>Да (низкие привилегии)</td><td>Да (in-the-wild)</td><td>Да</td><td>Patch Tuesday 08/2026</td></tr>
+<tr><td>CVE-2026-62815</td><td>Microsoft QUIC RCE</td><td>Microsoft</td><td>9.8</td><td>Critical</td><td>Windows 11/Server</td><td>Network</td><td>Нет</td><td>Не подтверждён</td><td>Нет</td><td>Patch Tuesday 08/2026</td></tr>
+<tr><td>CVE-2026-62893</td><td>Windows Deployment Services RCE</td><td>Microsoft</td><td>9.8</td><td>Critical</td><td>Windows Server (WDS role)</td><td>Network</td><td>Нет</td><td>Не подтверждён</td><td>Нет</td><td>Patch Tuesday 08/2026</td></tr>
+<tr><td>CVE-2026-62878</td><td>Windows DNS Server RCE</td><td>Microsoft</td><td>9.8</td><td>Critical</td><td>Windows Server (DNS role)</td><td>Network</td><td>Нет</td><td>Не подтверждён</td><td>Нет</td><td>Patch Tuesday 08/2026</td></tr>
+<tr><td>CVE-2026-20303/20304/20310/20312/20313</td><td>Cisco Catalyst SD-WAN multiple flaws</td><td>Cisco</td><td>9.9</td><td>Critical</td><td>Catalyst SD-WAN Software</td><td>Network</td><td>Варьируется</td><td>Нет данных</td><td>Нет</td><td>05.08.2026 advisory</td></tr>
+<tr><td>CVE-2026-20267…20273</td><td>Cisco IOS XE multiple flaws</td><td>Cisco</td><td>9.8</td><td>Critical</td><td>IOS XE Software</td><td>Network</td><td>Варьируется</td><td>Нет данных</td><td>Нет</td><td>05.08.2026 advisory</td></tr>
+<tr><td>CVE-2026-28139</td><td>Ajax Search Lite Unauthenticated PHP Object Injection</td><td>WordPress plugin</td><td>9.8</td><td>Critical</td><td>≤ 4.14.4</td><td>Network</td><td>Нет</td><td>Нет данных</td><td>Нет</td><td>4.14.5</td></tr>
+<tr><td>CVE-2026-65400</td><td>macOS Screen Sharing Auth Bypass</td><td>Apple</td><td>Не опубликован официально</td><td>High (оценочно)</td><td>macOS до Tahoe 26.6.1 / Sequoia 15.7.9 / Sonoma 14.8.9</td><td>Adjacent Network</td><td>Нет</td><td>Нет</td><td>Нет (заявлено отсутствие подтверждённой эксплуатации)</td><td>Выпущен</td></tr>
+</table>
+<p class="note">Полные workaround/mitigation детали — см. соответствующие тематические разделы выше и официальные advisories по ссылкам.</p>
+</div>
+
+<!-- ================= ATTACKS ================= -->
+<h2 id="attacks">9. Раздел «Кибератаки»</h2>
+<div class="card">
+
+<h3>DeadLock Ransomware</h3>
+<p><strong>Дата:</strong> публикация анализа Microsoft — 10.08.2026 &nbsp;|&nbsp; <strong>Тип атаки:</strong> Ransomware / двойное вымогательство &nbsp;|&nbsp; <strong>Вредоносное ПО:</strong> DeadLock (Rust-энкодер)</p>
+<p><strong>Цель:</strong> преимущественно европейские организации: IT, добывающая промышленность, транспорт, производство, гостиничный бизнес, потребительские товары (~80 жертв на июль 2026)</p>
+<p><strong>Первичный вектор:</strong> точно не раскрыт в открытых источниках на момент отчёта</p>
+<p><strong>Методы закрепления/устойчивости инфраструктуры:</strong> хранение конфигурации и leak-site контента в смарт-контрактах Polygon; чат с жертвами через децентрализованную сеть Session; хостинг похищенных файлов на Wasabi Cloud — позволяет менять инфраструктуру C2 без обновления клиента у жертвы и затрудняет takedown правоохранительными органами.</p>
+<p><strong>MITRE ATT&CK:</strong> T1486 (Data Encrypted for Impact), T1567 (Exfiltration Over Web Service), T1071 (Application Layer Protocol), T1090 (Proxy)</p>
+<p><strong>Рекомендации:</strong> мониторинг исходящего трафика к инфраструктуре Polygon/Session на конечных точках и периметре; резервное копирование по правилу 3-2-1; сегментация сети для ограничения бокового перемещения.</p>
+<p><strong>Источник:</strong> <a href="https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/" target="_blank">Microsoft Security Blog</a>, <a href="https://www.bleepingcomputer.com/news/security/deadlock-ransomware-uses-blockchain-to-resist-infrastructure-takedown/" target="_blank">BleepingComputer</a></p>
+
+<h3>Sandworm / UAC-0145 — трояны WireGuard через фейковые интервью</h3>
+<p><strong>Дата:</strong> кампания активна с мая 2026, публикация анализа — 11.08.2026 &nbsp;|&nbsp; <strong>Тип атаки:</strong> Целевой фишинг / социальная инженерия / trojanized software &nbsp;|&nbsp; <strong>Вредоносное ПО:</strong> «SopraVPN» (троянизированный клиент WireGuard)</p>
+<p><strong>APT-группа:</strong> Sandworm (APT44, GRU) / суб-кластер UAC-0145</p>
+<p><strong>Цель:</strong> украинские системные администраторы и IT-специалисты</p>
+<p><strong>Первичный вектор:</strong> фейковый рекрутер под видом «Atlas Business Group», предложение работы над проектом, связанным с Sopra Steria Bulgaria, перевод переписки в Telegram, интервью в Zoom, установка «корпоративного VPN» под видом технического задания.</p>
+<p><strong>Методы закрепления:</strong> запуск PowerShell-полезной нагрузки через троянизированный WireGuard-клиент, обеспечивающий удалённый доступ к скомпрометированной машине сисадмина.</p>
+<p><strong>MITRE ATT&CK:</strong> T1566 (Phishing), T1204 (User Execution), T1195 (Trojanized Software), T1059.001 (PowerShell)</p>
+<p><strong>Рекомендации:</strong> верификация рекрутеров и работодателей через официальные каналы; запрет установки стороннего ПО «для тестового задания» на корпоративных/личных устройствах с доступом к инфраструктуре; обучение персонала распознаванию сценариев job-offer фишинга.</p>
+<p><strong>Источник:</strong> <a href="https://thehackernews.com/2026/08/sandworm-linked-uac-0145-uses-fake-job.html" target="_blank">The Hacker News</a>, <a href="https://www.bleepingcomputer.com/news/security/sandworm-hackers-target-it-pros-with-trojanized-wireguard-vpn-client/" target="_blank">BleepingComputer</a>, <a href="https://therecord.media/russian-military-hackers-pose-as-recruiters-ukraine-it-workers" target="_blank">The Record</a></p>
+
+<h3>Operation Dream Job (Северная Корея)</h3>
+<p><strong>Тип атаки:</strong> Целевой фишинг / кибершпионаж &nbsp;|&nbsp; <strong>APT-группа:</strong> государственная группировка КНДР (связка Lazarus/подгруппы)</p>
+<p><strong>Цель:</strong> специалисты по всему миру, приманки — фейковые вакансии от имени Lockheed Martin и Enveil</p>
+<p><strong>Технические детали:</strong> кампания использует, среди прочего, <code>CVE-2026-68820</code> (Windows AFD.sys) для повышения привилегий после первичного заражения.</p>
+<p><strong>MITRE ATT&CK:</strong> T1566 (Phishing), T1068 (Exploitation for Privilege Escalation)</p>
+<p><strong>Источник:</strong> The Hacker News (сводный анализ Patch Tuesday и активной эксплуатации)</p>
+
+<h3>Кампания эксплуатации VMware vCenter (CVE-2026-59310)</h3>
+<p><strong>Дата:</strong> advisory Broadcom — 29.07.2026 (VMSA-2026-0006), начало массовой эксплуатации зафиксировано QUIRSO с 03.08.2026, отчёты об активной кампании — 11–13.08.2026</p>
+<p><strong>Тип атаки:</strong> Эксплуатация уязвимости в периметровой инфраструктуре виртуализации</p>
+<p><strong>Цель:</strong> 361 IP-адрес жертв в 47 странах; наиболее пострадавшие — Германия, США, Турция, Иран, Франция (185 из 361 IP)</p>
+<p><strong>Первичный вектор:</strong> directory traversal в Syslog-сервере vCenter, ведущий к RCE</p>
+<p><strong>Методы закрепления:</strong> развёртывание вредоносного cron-задания, установка reverse_ssh (открытый инструмент) для организации обратного SSH-туннеля к инфраструктуре атакующих.</p>
+<p><strong>MITRE ATT&CK:</strong> T1190 (Exploit Public-Facing Application), T1053.003 (Scheduled Task/Job: Cron), T1572 (Protocol Tunneling)</p>
+<p><strong>Рекомендации:</strong> немедленное применение патча VMSA-2026-0006; аудит cron-заданий на vCenter-хостах; блокировка исходящих SSH-соединений к нетипичным адресам; сегментация management-плоскости.</p>
+<p><strong>Источник:</strong> <a href="https://thehackernews.com/2026/08/attackers-exploit-vmware-vcenter.html" target="_blank">The Hacker News</a>, <a href="https://www.securityweek.com/critical-vmware-vcenter-vulnerability-in-attackers-crosshairs/" target="_blank">SecurityWeek</a>, <a href="https://www.darkreading.com/vulnerabilities-threats/global-threat-campaign-critical-vmware-vcenter-flaw" target="_blank">Dark Reading</a></p>
+</div>
+
+<!-- ================= IOC ================= -->
+<h2 id="ioc">10. IOC (индикаторы компрометации)</h2>
+<div class="card">
+<p class="note">Публично опубликованные IOC за отчётный период ограничены; конкретные значения (IP, домены, хэши) в большинстве случаев не раскрыты открыто вендорами/исследователями на момент подготовки отчёта, либо доступны только в приватных фидах партнёров (Microsoft MSTIC, QUIRSO, Resecurity). Ниже — то, что подтверждено публично.</p>
+<table>
+<tr><th>Тип</th><th>Значение / комментарий</th><th>Источник</th></tr>
+<tr><td>Инструмент закрепления</td><td>reverse_ssh (open-source, используется в кампании VMware vCenter)</td><td>Threat-research отчёты по CVE-2026-59310</td></tr>
+<tr><td>Инфраструктура C2</td><td>Смарт-контракты на блокчейне Polygon; сеть Session (chat-proxy); Wasabi Cloud (хостинг эксфильтрованных данных) — DeadLock</td><td>Microsoft Security Blog</td></tr>
+<tr><td>Вредоносное ПО</td><td>Trojanized WireGuard client «SopraVPN»</td><td>The Hacker News, BleepingComputer</td></tr>
+<tr><td>Целевой endpoint</td><td><code>/api/session/reset_password</code> (Metabase, точка входа для SQLi)</td><td>Resecurity, The Hacker News</td></tr>
+<tr><td>География атак (VMware vCenter)</td><td>361 уникальных IP жертв, 47 стран; топ-5: Германия, США, Турция, Иран, Франция</td><td>SecurityWeek, Infosecurity Magazine</td></tr>
+</table>
+<p class="note">Конкретные IP/domain/hash/YARA/Sigma/Snort/Suricata значения не были доступны в проверенных открытых источниках на момент публикации данного отчёта — рекомендуется дополнительный запрос в приватные TI-фиды (Resecurity, Microsoft MSTIC, VirusTotal Intelligence) для операционного использования в SIEM/EDR.</p>
+</div>
+
+<!-- ================= BREACHES ================= -->
+<h2 id="breaches">11. Утечки данных и киберинциденты</h2>
+<div class="card">
+<table>
+<tr><th>Организация / инцидент</th><th>Дата</th><th>Что произошло</th><th>Причина</th><th>Затронутые данные</th><th>Статус</th></tr>
+<tr>
+<td>Snowflake-экстортации (судебное дело)</td>
+<td>Пленение вины — 08.2026 (инциденты 2024 г.)</td>
+<td>Канадский гражданин Connor Riley Moucka признал вину в компьютерном мошенничестве и вымогательстве у более чем 165 организаций-клиентов Snowflake; также похищены данные звонков/SMS свыше 100 млн клиентов AT&T.</td>
+<td>Кража учётных данных клиентов Snowflake, отсутствие MFA</td>
+<td>Данные call/text history 100+ млн клиентов AT&T; данные 165+ организаций</td>
+<td>Признание вины, приговор ожидается 03.09.2026</td>
+</tr>
+<tr>
+<td>LiteLLM (PyPI) — вредоносные релизы</td>
+<td>Обнаружено 12.08.2026 (сами релизы датированы мартом, находились в реестре ~40 минут)</td>
+<td>Два вредоносных релиза LiteLLM на PyPI содержали код для кражи учётных данных: cloud keys, SSH-ключи, Kubernetes tokens, пароли БД и прочие секреты.</td>
+<td>Supply chain compromise пакета в PyPI</td>
+<td>Секреты/учётные данные систем, установивших пакет</td>
+<td>Пакеты удалены; масштаб воздействия уточняется</td>
+</tr>
+<tr>
+<td>Sedgwick</td>
+<td>Ранее в отчётном периоде (контекст)</td>
+<td>Раскрытие утечки данных после атаки ransomware группы TridentLocker</td>
+<td>Ransomware-атака</td>
+<td>Не уточнено в доступных источниках</td>
+<td>Раскрытие подтверждено компанией</td>
+</tr>
+</table>
+<p><strong>Официальный комментарий:</strong> по делу Snowflake/AT&T — подтверждено материалами уголовного преследования (DOJ США); по LiteLLM — пакеты удалены мейнтейнерами после обнаружения.</p>
+<p><strong>Рекомендации:</strong> для организаций, использующих Snowflake — принудительная многофакторная аутентификация и ротация ключей API; для разработчиков — проверка целостности пакетов PyPI/npm перед установкой (lock-файлы, хэш-верификация, приватные прокси-реестры с сканированием).</p>
+<p class="note">Крупные утечки с раскрытием конкретного числа затронутых записей за последние 24 часа (13–14.08.2026) в проверенных источниках не обнаружены; включены наиболее релевантные инциденты, получившие огласку/юридическое развитие в этот период.</p>
+</div>
+
+<!-- ================= BUSINESS IMPACT ================= -->
+<h2 id="impact">12. Business Impact</h2>
+<div class="card">
+<table>
+<tr><th>Событие</th><th>Вероятность эксплуатации</th><th>Влияние на бизнес</th><th>Риск для инфраструктуры</th><th>Риск для пользователей</th><th>Риск для облака</th><th>Приоритет</th></tr>
+<tr><td>Metabase SQLi (CVE-2026-72898)</td><td>Высокая (активно)</td><td>Полная компрометация BI-системы, утечка данных из подключённых БД</td><td>Critical</td><td>Medium</td><td>High</td><td><span class="badge critical">Critical</span></td></tr>
+<tr><td>VMware vCenter (CVE-2026-59310)</td><td>Высокая (активно, глобально)</td><td>Компрометация виртуализационной инфраструктуры, риск полной остановки ЦОД</td><td>Critical</td><td>Low</td><td>High</td><td><span class="badge critical">Critical</span></td></tr>
+<tr><td>Windows AFD.sys (CVE-2026-68820)</td><td>Высокая (активно)</td><td>Локальное повышение привилегий, плацдарм для дальнейшего закрепления APT</td><td>High</td><td>Medium</td><td>Low</td><td><span class="badge critical">Critical</span></td></tr>
+<tr><td>MS QUIC / WDS / DNS Server RCE</td><td>Средняя (PoC не публичен)</td><td>Потенциальный полный компромисс сервера без аутентификации</td><td>High</td><td>Low</td><td>Medium</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Cisco Catalyst SD-WAN / IOS XE</td><td>Средняя (не выявлена эксплуатация)</td><td>Компрометация сетевой инфраструктуры / WAN-каналов</td><td>High</td><td>Low</td><td>Low</td><td><span class="badge high">High</span></td></tr>
+<tr><td>DeadLock Ransomware</td><td>Средняя (таргетированные атаки)</td><td>Простой бизнеса, утечка данных, финансовые потери от выкупа</td><td>High</td><td>Medium</td><td>Medium</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Sandworm/UAC-0145 job-offer фишинг</td><td>Средняя (таргетированная соц. инженерия)</td><td>Компрометация учётных данных ИТ-персонала, боковое перемещение</td><td>High</td><td>High</td><td>Low</td><td><span class="badge high">High</span></td></tr>
+<tr><td>BdThemes Supply Chain (WordPress)</td><td>Высокая (активно)</td><td>Захват административного доступа к сайтам, установка веб-шеллов</td><td>Medium</td><td>Medium</td><td>Low</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Ajax Search Lite (CVE-2026-28139)</td><td>Средняя</td><td>Потенциальный RCE через POP-цепочки на WordPress-сайтах</td><td>Medium</td><td>Low</td><td>Low</td><td><span class="badge medium">Medium</span></td></tr>
+<tr><td>macOS Screen Sharing (CVE-2026-65400)</td><td>Низкая (не подтверждена)</td><td>Обход аутентификации при удалённом доступе к Mac</td><td>Medium</td><td>Medium</td><td>Low</td><td><span class="badge medium">Medium</span></td></tr>
+</table>
+</div>
+
+<!-- ================= SOURCES ================= -->
+<h2 id="sources">13. Источники</h2>
+<div class="card">
+<ul class="src-list">
+<li><a href="https://www.securityweek.com/august-2026-patch-tuesday-microsoft-fixes-421-cves-one-exploited-zero-day/" target="_blank">SecurityWeek — August 2026 Patch Tuesday</a></li>
+<li><a href="https://www.tenable.com/blog/microsofts-august-2026-patch-tuesday-addresses-398-cves-cve-2026-68820" target="_blank">Tenable — Patch Tuesday Analysis</a></li>
+<li><a href="https://blog.qualys.com/vulnerabilities-threat-research/patch-tuesday/2026/08/11/microsoft-patch-tuesday-august-2026-security-update-review" target="_blank">Qualys — Patch Tuesday Review</a></li>
+<li><a href="https://www.crowdstrike.com/en-us/blog/patch-tuesday-analysis-august-2026/" target="_blank">CrowdStrike — Patch Tuesday Analysis</a></li>
+<li><a href="https://cybersecuritynews.com/microsoft-patch-tuesday-update-august-2026/" target="_blank">Cybersecurity News — Patch Tuesday Update</a></li>
+<li><a href="https://www.zerodayinitiative.com/blog/2026/8/11/the-august-2026-security-update-review" target="_blank">Zero Day Initiative — August 2026 Review</a></li>
+<li><a href="https://blog.talosintelligence.com/microsoft-patch-tuesday-for-august-2026/" target="_blank">Cisco Talos — Patch Tuesday Snort Rules</a></li>
+<li><a href="https://thehackernews.com/2026/08/microsoft-patches-398-flaws-including.html" target="_blank">The Hacker News — Microsoft Patches 398 Flaws</a></li>
+<li><a href="https://krebsonsecurity.com/2026/08/canadian-man-pleads-guilty-in-snowflake-extortions/" target="_blank">Krebs on Security — Snowflake Extortions</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/microsoft/windows-10-kb5120249-cumulative-update-released-with-fixes/" target="_blank">BleepingComputer — Windows 10 KB5120249</a></li>
+<li><a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-L4XfJg8S" target="_blank">Cisco — Advance Notification 05.08.2026</a></li>
+<li><a href="https://thehackernews.com/2026/08/bdthemes-supply-chain-attack-poisons.html" target="_blank">The Hacker News — BdThemes Supply Chain Attack</a></li>
+<li><a href="https://gbhackers.com/critical-wordpress-plugin-backdoor-exposes-20000-sites/" target="_blank">GBHackers — Critical WordPress Plugin Backdoor</a></li>
+<li><a href="https://wordfence.com/blog/2026/08/wordfence-intelligence-weekly-wordpress-vulnerability-report-july-27-2026-to-august-2-2026" target="_blank">Wordfence Intelligence — Weekly Report</a></li>
+<li><a href="https://developer.joomla.org/security-centre.html" target="_blank">Joomla Security Centre</a></li>
+<li><a href="https://thehackernews.com/2026/06/cisa-warns-of-actively-exploited-joomla.html" target="_blank">The Hacker News — Joomla JCE KEV</a></li>
+<li><a href="https://threat-modeling.com/cve-2026-48908-cve-2026-56290-joomla-page-builders-cisa-kev/" target="_blank">Threat-Modeling.com — Joomla Page Builder KEV</a></li>
+<li><a href="https://support.apple.com/en-us/100100" target="_blank">Apple Security Releases</a></li>
+<li><a href="https://www.inc.com/georgia-fearn/apple-just-released-mac-security-updates-to-fix-1-flaw-update-your-software-today/91386545" target="_blank">Inc.com — Apple Mac Security Update</a></li>
+<li><a href="https://thehackernews.com/2026/08/metabase-zero-day-exploited-in-wild.html" target="_blank">The Hacker News — Metabase Zero-Day</a></li>
+<li><a href="https://www.resecurity.com/blog/article/metabase-zero-day-exploited-in-the-wild-unauthenticated-sql-injection-leading-to-full-admin-access" target="_blank">Resecurity — Metabase Zero-Day Analysis</a></li>
+<li><a href="https://securityaffairs.com/196874/hacking/metabase-zero-day-exploited-in-the-wild-exposing-admin-access-and-sensitive-data.html" target="_blank">Security Affairs — Metabase Zero-Day</a></li>
+<li><a href="https://www.securityweek.com/metabase-patches-vulnerability-exploited-as-zero-day/" target="_blank">SecurityWeek — Metabase Patch</a></li>
+<li><a href="https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/" target="_blank">Microsoft Security Blog — DeadLock Ransomware</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/deadlock-ransomware-uses-blockchain-to-resist-infrastructure-takedown/" target="_blank">BleepingComputer — DeadLock Ransomware</a></li>
+<li><a href="https://thehackernews.com/2026/08/deadlock-ransomware-uses-polygon-smart.html" target="_blank">The Hacker News — DeadLock Polygon</a></li>
+<li><a href="https://thehackernews.com/2026/08/sandworm-linked-uac-0145-uses-fake-job.html" target="_blank">The Hacker News — Sandworm/UAC-0145</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/sandworm-hackers-target-it-pros-with-trojanized-wireguard-vpn-client/" target="_blank">BleepingComputer — Sandworm WireGuard</a></li>
+<li><a href="https://therecord.media/russian-military-hackers-pose-as-recruiters-ukraine-it-workers" target="_blank">The Record — Sandworm Recruiter Scam</a></li>
+<li><a href="https://thehackernews.com/2026/08/attackers-exploit-vmware-vcenter.html" target="_blank">The Hacker News — VMware vCenter Exploitation</a></li>
+<li><a href="https://www.securityweek.com/critical-vmware-vcenter-vulnerability-in-attackers-crosshairs/" target="_blank">SecurityWeek — VMware vCenter</a></li>
+<li><a href="https://www.darkreading.com/vulnerabilities-threats/global-threat-campaign-critical-vmware-vcenter-flaw" target="_blank">Dark Reading — Global VMware Campaign</a></li>
+<li><a href="https://www.infosecurity-magazine.com/news/vcenter-cve-2026-59310-exploited/" target="_blank">Infosecurity Magazine — vCenter Exploited</a></li>
+</ul>
+</div>
+
+<footer>
+  Отчёт подготовлен автоматически по данным открытых источников CTI за 13–14.08.2026. Отдельные позиции отмечены как «Предварительная информация» при отсутствии официального подтверждения от вендора на момент публикации. Информация верифицирована минимум по двум независимым источникам, за исключением случаев, отмеченных отдельно.
+</footer>
+
+</div>
+</body>
+</html>
